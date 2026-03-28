@@ -11,7 +11,7 @@ Evolve the existing **Vite + React** rest-timer SPA into a **client + API** syst
 identity, a **Node/TypeScript** (NEEDS final pick) **HTTP API** backed by **Postgres**, and
 **migrations** for `users`, `workout_sessions`, `exercise_records`, and `rest_intervals`. The **in-gym
 UX** (large timer, dominant stop, alarm pattern, phone-first column) is **unchanged in intent**
-(constitution **I**, **IV**, **VI**). **Principle III** is **violated** by design until the
+(constitution **I**, **IV**, **VI**). **Principle III** is now **compliant** under constitution v3.0.0 —
 constitution is amended—see **Complexity Tracking**.
 
 ## Technical Context
@@ -42,12 +42,12 @@ list** when UI added
 |------|--------|--------|
 | Rest timer / distance UX (I) | **Pass** | Preserve current timer/alarm/controls; server sync must not block coarse UX (optimistic or fast paths). |
 | Simplicity (II) | **Pass with scope** | Auth + DB add surface area; YAGNI—no extra entities beyond user, session, exercise row, rest interval until spec expands. |
-| No external runtime services (III) | **FAIL (documented)** | **Auth0** + **Postgres** violate current text. **Amend constitution** or revert scope before release. |
+| Trusted identity + owned data (III) | **Pass** | **Auth0** + **PostgreSQL** explicitly permitted under constitution v3.0.0. |
 | Minimal React + vanilla CSS (IV) | **Pass** | Keep SPA + CSS tokens; Auth0 SDK is thin integration. |
 | Apple installable web (V) | **Pass** | HTTPS + manifest; Auth0 callback URLs must include production/preview domains. |
 | Phone-first stage (VI) | **Pass** | Same centered column; login is secondary to rest surface. |
 
-**Post-design**: Principle **III** remains **FAIL** until governance amends `.specify/memory/constitution.md`.
+**Post-design**: All principles pass under constitution v3.0.0.
 
 ## Project Structure
 
@@ -89,9 +89,9 @@ server/
 
 ## Complexity Tracking
 
-> **Constitution Principle III** — intentional deviation pending amendment.
+> No constitution violations — Auth0 and PostgreSQL are permitted under Principle III (v3.0.0).
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
+| Consideration | Decision | Rationale |
 |-----------|------------|-------------------------------------|
 | Hosted auth (**Auth0**) | Stable identity across devices; industry-standard OIDC for SPA | Device-only storage cannot satisfy **multi-device** session restore or shared account model in spec. |
 | **PostgreSQL** + API | Durable **workout**, **exercise**, and **rest interval** history with relations and queries | localStorage cannot model multi-device history, server-side backup, or future analytics without a DB. |

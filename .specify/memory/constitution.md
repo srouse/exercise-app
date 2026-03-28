@@ -1,13 +1,13 @@
 <!--
 Sync Impact Report
-Version change: 2.1.0 → 2.2.0
+Version change: 2.2.0 → 3.0.0
 Modified principles:
-  - I. Rest intervals first — expanded session model (one active session, series of rest timers
-    for pacing); UX reframed for phone laid flat / at-a-distance (very large controls & primary
-    state, no fine-detail reliance); less prescriptive about typography
+  - III. No external runtime services → Trusted identity and owned data — minimal external services;
+    Auth0 (OIDC) + application-owned API + PostgreSQL are now permitted; unnecessary third-party
+    services (analytics, tracking, social, ads) remain prohibited.
 Templates requiring updates:
-  - .specify/templates/plan-template.md — ✅ Constitution Check bullet
-  - .specify/templates/spec-template.md — ✅ Constitution summary line
+  - .specify/templates/plan-template.md — ✅ Constitution Check bullet updated
+  - .specify/templates/spec-template.md — ✅ Constitution summary line updated
 Follow-up TODOs: None
 -->
 
@@ -45,14 +45,17 @@ spec. New capabilities MUST be rejected unless they are necessary for that core 
 installability on target platforms (see Principle V). **Rationale:** Friction kills the
 in-workout flow; scope creep defeats the purpose.
 
-### III. No external runtime services
+### III. Trusted identity and owned data — minimal external services
 
-The application MUST NOT depend on third-party runtime services: no external APIs, analytics,
-hosted auth, or cloud sync in the shipped product. User data MUST remain on the user’s device
-using web platform storage (for example `localStorage` or IndexedDB) unless the constitution
-is amended. **Exception:** Static hosting of built assets (HTML/CSS/JS) for deployment is
-allowed and does not count as an “external service” in this sense. **Rationale:** Privacy,
-reliability, and simplicity—no accounts, keys, or network dependency for daily use.
+The application MAY depend on a **trusted identity provider** (Auth0 or equivalent OIDC/OAuth2
+service) for user authentication and on an **application-owned API and database** (for example
+PostgreSQL) for durable, user-scoped data storage. These are **permitted** because multi-device
+durability and stable user identity require server-side infrastructure. Beyond these, the product
+MUST NOT introduce unnecessary third-party runtime services: **no analytics, no tracking pixels,
+no ad networks, no social SDKs, no cloud sync outside the application-owned API**. Static hosting
+of built assets (HTML/CSS/JS) is allowed and does not count as an "external service."
+**Rationale:** User identity and durable workout history justify server infrastructure; everything
+else adds privacy risk, reliability risk, and complexity without serving the core rest-timer job.
 
 ### IV. Minimal React, single-page shell
 
@@ -62,11 +65,11 @@ primary view surface (no multi-page traditional navigation) unless the constitut
 trees or extra UI frameworks without Complexity Tracking justification). Styling MUST remain
 straightforward: **vanilla CSS** (global or per-component files) unless a tiny build step is
 unavoidable; avoid CSS-in-JS stacks and heavy design systems. **Rationale:** A stable SPA with
-light React matches “simple but structured”; keeps the codebase small and approachable.
+light React matches "simple but structured"; keeps the codebase small and approachable.
 
 ### V. Installable web on Apple platforms
 
-The app MUST be deliverable as static web assets that install or “Add to Home Screen” on
+The app MUST be deliverable as static web assets that install or "Add to Home Screen" on
 Apple mobile (iPhone/iPad) and are usable on Apple desktop (Safari on macOS). Plans MUST
 address WebKit/Safari constraints (storage, standalone display, icons) where relevant. A web
 app manifest and service worker are RECOMMENDED when they improve installability or offline
@@ -87,9 +90,11 @@ are secondary.
 
 - **Stack:** Minimal React SPA (Principle IV); vanilla CSS; JavaScript/TypeScript as needed for
   React; a small bundler (for example Vite) is permitted to produce deployable static assets.
-- **Data:** Client-side persistence only; no server-side user database (Principle III).
-- **Hosting:** Static hosting of built assets is permitted; HTTPS SHOULD be used so install/PWA
-  behaviors work reliably on Apple platforms.
+- **Identity:** Auth0 (or equivalent OIDC provider) for user authentication (Principle III).
+- **Data:** Application-owned API (Fastify) + PostgreSQL for server-side persistence (Principle III);
+  client-side cache (localStorage/IndexedDB) is optional for resilience only — server is source of truth.
+- **Hosting:** Static hosting of SPA assets + HTTPS API hosting are permitted; HTTPS required so
+  install/PWA behaviors work reliably on Apple platforms.
 - **Testing:** Manual verification in Safari (iOS and macOS) is the default acceptance path;
   automated tests are OPTIONAL unless the feature spec requests them.
 
@@ -97,7 +102,7 @@ are secondary.
 
 - Feature specs and implementation plans MUST verify compliance with `.specify/memory/constitution.md`
   before design is finalized.
-- Any intentional violation of a principle MUST be documented in the plan’s Complexity Tracking
+- Any intentional violation of a principle MUST be documented in the plan's Complexity Tracking
   table with justification and a simpler alternative considered.
 - Constitution changes follow the Governance section; application behavior changes follow the spec
   and task workflow.
@@ -117,4 +122,4 @@ principles before merge or release; runtime development guidance may live in `RE
 
 for every action you do, look into command `/test` and do what it requests.
 
-**Version**: 2.2.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-23
+**Version**: 3.0.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-28

@@ -37,8 +37,8 @@ Verify against `.specify/memory/constitution.md` (Daily Exercise Time project):
   phone often laid flat—primary state and controls extremely large, readable from afar, easy to
   hit; easy start, dominant stop; completion obvious at distance + optional bundled/web audio.
 - **Simplicity**: No unnecessary screens, entities, or integrations; YAGNI respected.
-- **No external runtime services**: No third-party APIs, analytics, hosted auth, or cloud sync in
-  the shipped app; data stays on device (web storage). Static asset hosting only.
+- **Trusted identity and owned data**: Auth0 (or OIDC equivalent) + application-owned API +
+  PostgreSQL are permitted; no analytics, tracking, ad networks, or social SDKs beyond these.
 - **Minimal React SPA**: Single stable page shell; React used sparingly; vanilla CSS; no extra UI
   frameworks without Complexity Tracking justification.
 - **Apple installable web**: Plan addresses Safari/WebKit and install / Add to Home Screen as needed.

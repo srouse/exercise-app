@@ -7,10 +7,9 @@
 
 **Constitution**: Functional requirements and user journeys MUST remain consistent with
 `.specify/memory/constitution.md` (session = series of rest timers for pacing; laid-flat /
-at-a-distance UI, simplicity,
-no external runtime services, minimal React SPA with vanilla CSS, installable web on Apple
-platforms, phone-first centered layout and playful tone). Flag any proposed exception explicitly
-in Requirements.
+at-a-distance UI, simplicity, Auth0 + owned API/DB permitted but no unnecessary third-party
+services, minimal React SPA with vanilla CSS, installable web on Apple platforms, phone-first
+centered layout and playful tone). Flag any proposed exception explicitly in Requirements.
 
 ## User Scenarios & Testing *(mandatory)*
 
