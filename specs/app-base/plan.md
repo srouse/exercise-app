@@ -40,7 +40,7 @@ list** when UI added
 
 | Gate | Status | Notes |
 |------|--------|--------|
-| Rest timer / distance UX (I) | **Pass** | Preserve current timer/alarm/controls; server sync must not block coarse UX (optimistic or fast paths). |
+| Laid flat, readable from afar (I) | **Pass** | Preserve current timer/alarm/controls; server sync must not block coarse UX (optimistic or fast paths). |
 | Simplicity (II) | **Pass with scope** | Auth + DB add surface area; YAGNI—no extra entities beyond user, session, exercise row, rest interval until spec expands. |
 | Trusted identity + owned data (III) | **Pass** | **Auth0** + **PostgreSQL** explicitly permitted under constitution v3.0.0. |
 | Minimal React + vanilla CSS (IV) | **Pass** | Keep SPA + CSS tokens; Auth0 SDK is thin integration. |

@@ -25,7 +25,7 @@ Add **Auth0 PKCE** sign-in to the existing **React + Vite** SPA and a **Fastify 
 
 | Gate | Status | Notes |
 |------|--------|--------|
-| Rest timer / distance UX (I) | **Pass** | Timer, alarm, stop, Done controls unchanged; server sync must not block coarse UX — optimistic or fast paths required. |
+| Laid flat, readable from afar (I) | **Pass** | Timer, alarm, stop, Done controls unchanged; server sync must not block coarse UX — optimistic or fast paths required. |
 | Simplicity (II) | **Pass with scope** | Auth + DB add surface area; YAGNI enforced — no entities beyond `users`, `workout_sessions`, `exercise_records`, `rest_intervals`. |
 | Trusted identity + owned data (III) | **Pass** | Auth0 + PostgreSQL explicitly permitted by constitution v3.0.0; no analytics or unnecessary third-party services added. |
 | Minimal React + vanilla CSS (IV) | **Pass** | Auth0 SDK is thin integration; keep SPA + CSS token system; no extra UI frameworks. |

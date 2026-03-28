@@ -6,9 +6,9 @@
 **Input**: User description: "$ARGUMENTS"
 
 **Constitution**: Functional requirements and user journeys MUST remain consistent with
-`.specify/memory/constitution.md` (session = series of rest timers for pacing; laid-flat /
-at-a-distance UI, simplicity, Auth0 + owned API/DB permitted but no unnecessary third-party
-services, minimal React SPA with vanilla CSS, installable web on Apple platforms, phone-first
+`.specify/memory/constitution.md` (laid flat / readable from afar — every screen, large targets,
+coarse interaction; simplicity; Auth0 + owned API/DB permitted but no unnecessary third-party
+services; minimal React SPA with vanilla CSS; installable web on Apple platforms; phone-first
 centered layout and playful tone). Flag any proposed exception explicitly in Requirements.
 
 ## User Scenarios & Testing *(mandatory)*

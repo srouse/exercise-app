@@ -33,9 +33,9 @@
 
 Verify against `.specify/memory/constitution.md` (Daily Exercise Time project):
 
-- **Rest timer / distance UX**: One active session made of a series of rest timers for pacing;
-  phone often laid flat—primary state and controls extremely large, readable from afar, easy to
-  hit; easy start, dominant stop; completion obvious at distance + optional bundled/web audio.
+- **Laid flat, readable from afar**: Every primary state, control, and feedback across the entire
+  product must be readable at a glance from a distance and touchable quickly without picking up
+  the device; extremely large elements, no small targets or dense layout anywhere.
 - **Simplicity**: No unnecessary screens, entities, or integrations; YAGNI respected.
 - **Trusted identity and owned data**: Auth0 (or OIDC equivalent) + application-owned API +
   PostgreSQL are permitted; no analytics, tracking, ad networks, or social SDKs beyond these.

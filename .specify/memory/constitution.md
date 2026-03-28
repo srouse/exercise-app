@@ -1,13 +1,13 @@
 <!--
 Sync Impact Report
-Version change: 2.2.0 → 3.0.0
+Version change: 3.0.0 → 3.1.0
 Modified principles:
-  - III. No external runtime services → Trusted identity and owned data — minimal external services;
-    Auth0 (OIDC) + application-owned API + PostgreSQL are now permitted; unnecessary third-party
-    services (analytics, tracking, social, ads) remain prohibited.
+  - I. Rest intervals first → Laid flat, readable from afar; principle broadened from
+    rest-timer-specific guidance to a universal UX requirement applying to every screen and
+    interaction in the product.
 Templates requiring updates:
-  - .specify/templates/plan-template.md — ✅ Constitution Check bullet updated
-  - .specify/templates/spec-template.md — ✅ Constitution summary line updated
+  - .specify/templates/plan-template.md — Constitution Check bullet updated
+  - .specify/templates/spec-template.md — Constitution summary line updated
 Follow-up TODOs: None
 -->
 
@@ -15,27 +15,21 @@ Follow-up TODOs: None
 
 ## Core Principles
 
-### I. Rest intervals first: laid flat, readable from afar
+### I. Laid flat, readable from afar
 
-Workouts are organized as **sessions**. Initially the product MUST support **one active workout
-session at a time**, composed of a **series of rest timers** between exercise efforts so pacing
-stays honest: long enough between movements that you **do not rush**, short enough that you **do
-not drift** and rest too long. Later scope (for example multiple saved sessions or history) MUST
-be added only in ways that preserve this core loop unless the constitution is amended.
-
-Each rest timer MUST be trivial to **start**, **follow while it runs**, and **stop early** or
-**let finish**. The UI MUST assume the phone is often **lying on a surface** (bench, floor,
-stand)—not held up to the face—so the user can **glance from a distance**. Primary state and
-controls MUST be **extremely large and easy to hit** for that kind of use: what matters now MUST
-read clearly **from afar**, and actions MUST not depend on small targets or dense layout.
-**Starting** MUST take **minimal effort** from the main surface; **stopping or cancelling** MUST
-remain a **dominant, easy control**. When a timer **completes**, the app MUST provide **strong
-visible completion feedback** obvious **at a distance**. A **short audible cue** SHOULD be
-available using **web-platform or bundled audio only** (no third-party audio services). The whole
-flow MUST assume **mid-workout**—hands and attention often elsewhere—so **distance readability and
-coarse, forgiving interaction** outweigh information density. Features that obscure this
-rest-timer job require explicit constitution amendment. **Rationale:** Rest is easy to misjudge;
-the app supports disciplined pacing without becoming a full program designer or social tracker.
+The app MUST assume the phone is often **lying on a surface** — bench, floor, stand — not held
+up to the face. Every **primary state**, **control**, and **feedback** across the entire product
+MUST be **readable at a glance from a distance** and **touchable quickly** without picking up
+the device. Primary elements MUST be **extremely large and easy to hit**; actions MUST NOT
+depend on small targets, dense layout, or fine-detail reading. **Completion feedback** of any
+kind MUST be **obvious at a distance**. A **short audible cue** SHOULD be available for
+time-sensitive events using **web-platform or bundled audio only** (no third-party audio
+services). The whole app MUST assume **mid-workout conditions** — hands and attention often
+elsewhere — so **distance readability and coarse, forgiving interaction** outweigh information
+density at every level of the product. Any feature that requires picking up the device or
+reading small text to operate requires explicit constitution amendment. **Rationale:**
+In-workout use means the device is often set down; every screen must work from a glance and
+a coarse tap.
 
 ### II. Radical simplicity (YAGNI)
 
@@ -122,4 +116,4 @@ principles before merge or release; runtime development guidance may live in `RE
 
 for every action you do, look into command `/test` and do what it requests.
 
-**Version**: 3.0.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-28
+**Version**: 3.1.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-28
