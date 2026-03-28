@@ -1,6 +1,6 @@
 # Research: Bootstrap session timer (Phase 0)
 
-**Feature**: `001-bootstrap-session-timer`  
+**Feature**: `001-exercise-app`  
 **Date**: 2026-03-23
 
 ## 1. Build tool and React shape

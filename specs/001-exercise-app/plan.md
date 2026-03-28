@@ -1,11 +1,11 @@
-# Implementation Plan: Bootstrap session timer — Auth0 + PostgreSQL + server-backed workouts
+# Implementation Plan: Exercise app — Auth0 + PostgreSQL + server-backed workouts
 
-**Branch**: `001-bootstrap-session-timer` | **Date**: 2026-03-28 | **Spec**: [../app-base/spec.md](../app-base/spec.md)
+**Branch**: `001-bootstrap-session-timer` | **Date**: 2026-03-28 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification — evolve the Vite rest-timer SPA to use **Auth0** for identity and **PostgreSQL** for durable workout session storage (sessions, exercises, rest intervals).
 
 ## Summary
 
-Add **Auth0 PKCE** sign-in to the existing **React + Vite** SPA and a **Fastify + Drizzle ORM** Node API backed by **PostgreSQL** so each workout session — including exercise labels and rest intervals (planned duration, start/end, outcome) — is a **durable, user-scoped server record**. The in-gym UX (large timer, dominant stop, repeating alarm, phone-first centered column) is **unchanged in intent**. All constitution principles pass under v3.0.0.
+Add **Auth0 PKCE** sign-in to the existing **React + Vite** SPA and a **Fastify + Drizzle ORM** Node API backed by **PostgreSQL** so each workout session — including exercise labels and rest intervals (planned duration, start/end, outcome) — is a **durable, user-scoped server record**. The in-gym UX (large timer, dominant stop, repeating alarm, phone-first centered column) is **unchanged in intent**. All constitution principles pass under v3.1.0.
 
 ## Technical Context
 
@@ -27,31 +27,31 @@ Add **Auth0 PKCE** sign-in to the existing **React + Vite** SPA and a **Fastify 
 |------|--------|--------|
 | Laid flat, readable from afar (I) | **Pass** | Timer, alarm, stop, Done controls unchanged; server sync must not block coarse UX — optimistic or fast paths required. |
 | Simplicity (II) | **Pass with scope** | Auth + DB add surface area; YAGNI enforced — no entities beyond `users`, `workout_sessions`, `exercise_records`, `rest_intervals`. |
-| Trusted identity + owned data (III) | **Pass** | Auth0 + PostgreSQL explicitly permitted by constitution v3.0.0; no analytics or unnecessary third-party services added. |
+| Trusted identity + owned data (III) | **Pass** | Auth0 + PostgreSQL explicitly permitted by constitution v3.1.0; no analytics or unnecessary third-party services added. |
 | Minimal React + vanilla CSS (IV) | **Pass** | Auth0 SDK is thin integration; keep SPA + CSS token system; no extra UI frameworks. |
 | Apple installable web (V) | **Pass** | HTTPS + manifest maintained; Auth0 callback URLs must include production/preview/standalone origins. |
 | Phone-first stage (VI) | **Pass** | Centered column unchanged; sign-in is secondary surface. |
 
-**Post-design re-check**: All principles pass under constitution v3.0.0.
+**Post-design re-check**: All principles pass under constitution v3.1.0.
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/001-bootstrap-session-timer/
+specs/001-exercise-app/
+├── spec.md              # Feature spec
 ├── plan.md              # This file
-└── tasks.md             # Phase 2 output (/speckit.tasks — not yet created)
-
-specs/app-base/          # Phase 0-1 artifacts (authoritative, pre-existing)
-├── spec.md              # Feature spec (this plan's source)
 ├── research.md          # Phase 0: decisions resolved
 ├── data-model.md        # Phase 1: Postgres entities + state transitions
 ├── quickstart.md        # Phase 1: dev setup guide
-└── contracts/
-    ├── README.md
-    ├── openapi.yaml     # API contract v0.1
-    └── storage-schema.json  # Legacy client cache — shrink/remove when API sync ships
+├── tasks.md             # Phase 2 output (/speckit.tasks)
+├── contracts/
+│   ├── README.md
+│   ├── openapi.yaml     # API contract v0.1
+│   └── storage-schema.json  # Legacy client cache — shrink/remove when API sync ships
+└── checklists/
+    └── requirements.md
 ```
 
 ### Source Code (repository root)
@@ -93,7 +93,7 @@ server/
 
 ## Phase 0 — Research (complete)
 
-All decisions resolved in [../app-base/research.md](../app-base/research.md). Key outcomes:
+All decisions resolved in [research.md](research.md). Key outcomes:
 
 | Decision | Outcome |
 |----------|---------|
@@ -115,10 +115,10 @@ All decisions resolved in [../app-base/research.md](../app-base/research.md). Ke
 
 | Artifact | Location |
 |----------|---------|
-| Data model | [../app-base/data-model.md](../app-base/data-model.md) |
-| API contract (OpenAPI) | [../app-base/contracts/openapi.yaml](../app-base/contracts/openapi.yaml) |
-| Contract README | [../app-base/contracts/README.md](../app-base/contracts/README.md) |
-| Quickstart | [../app-base/quickstart.md](../app-base/quickstart.md) |
+| Data model | [data-model.md](data-model.md) |
+| API contract (OpenAPI) | [contracts/openapi.yaml](contracts/openapi.yaml) |
+| Contract README | [contracts/README.md](contracts/README.md) |
+| Quickstart | [quickstart.md](quickstart.md) |
 
 ### Key API surface (summary)
 
@@ -152,7 +152,7 @@ All mutating and session-loading routes require `Authorization: Bearer <Auth0 ac
 
 ## Complexity Tracking
 
-> No constitution violations — Auth0, PostgreSQL, and API are all permitted under Principle III (v3.0.0).
+> No constitution violations — Auth0, PostgreSQL, and API are all permitted under Principle III (v3.1.0).
 
 | Consideration | Decision | Rationale |
 |---------------|----------|-----------|
@@ -170,4 +170,4 @@ All mutating and session-loading routes require `Authorization: Bearer <Auth0 ac
 
 ## Phase 2
 
-Run `/speckit.tasks` -> generates `specs/001-bootstrap-session-timer/tasks.md`.
+Run `/speckit.tasks` -> generates `specs/001-exercise-app/tasks.md`.

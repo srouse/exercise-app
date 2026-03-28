@@ -1,7 +1,7 @@
 # Data model: Auth0 user, workout session, exercises, rest intervals
 
-**Feature**: app-base (amended 2026-03-28)  
-**Spec**: [spec.md](./spec.md)  
+**Feature**: 001-exercise-app
+**Spec**: [spec.md](./spec.md)
 **Persistence**: **PostgreSQL** (primary); optional client cache (see [contracts/README.md](./contracts/README.md))
 
 ## Server entities (PostgreSQL)

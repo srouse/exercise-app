@@ -1,6 +1,6 @@
 # Quickstart: SPA + API + Auth0 + Postgres
 
-**Repo root**: `/Users/scott.rouse/Workspace/SpecKit/firstOne/firstone`
+**Repo root**: `/Users/scott.rouse/Workspace/exercise-app`
 
 ## Prerequisites
 

@@ -1,10 +1,10 @@
 ---
-description: "Task list for 001-bootstrap-session-timer feature implementation"
+description: "Task list for 001-exercise-app feature implementation"
 ---
 
-# Tasks: Bootstrap session and rest timer
+# Tasks: Exercise app — session timer, Auth0, and server persistence
 
-**Input**: Design documents from `/Users/scott.rouse/Workspace/SpecKit/firstOne/firstone/specs/001-bootstrap-session-timer/`  
+**Input**: Design documents from `specs/001-exercise-app/`
 **Prerequisites**: [plan.md](./plan.md), [spec.md](./spec.md), [data-model.md](./data-model.md), [contracts/](./contracts/), [research.md](./research.md), [quickstart.md](./quickstart.md)
 
 **Tests**: Not requested in spec—no automated test tasks. Validate with [quickstart.md](./quickstart.md) manual matrix.
@@ -19,7 +19,7 @@ description: "Task list for 001-bootstrap-session-timer feature implementation"
 ## Path conventions
 
 - **App source root**: `src/` (Vite + React + TypeScript at repository root)
-- **Spec artifacts**: `specs/001-bootstrap-session-timer/contracts/storage-schema.json`
+- **Spec artifacts**: `specs/001-exercise-app/contracts/storage-schema.json`
 
 ---
 
@@ -44,9 +44,9 @@ description: "Task list for 001-bootstrap-session-timer feature implementation"
 - [x] T006 Create `src/styles/tokens-semantic.css` referencing **only** primitive variables for `--color-surface`, `--color-text`, `--color-accent`, `--color-alarm`, `--font-timer`, `--touch-target-min`, `--layout-max-width`, and control sizing
 - [x] T007 Create `src/styles/global.css` that imports both token files, applies minimal reset, and defines a centered `.app-shell` using `--layout-max-width` (constitution: phone-first, centered column)
 - [x] T008 Import `src/styles/global.css` from `src/main.tsx`
-- [x] T009 [P] Create `src/lib/sessionTypes.ts` with TypeScript types matching [data-model.md](./data-model.md) and fields in `specs/001-bootstrap-session-timer/contracts/storage-schema.json`
+- [x] T009 [P] Create `src/lib/sessionTypes.ts` with TypeScript types matching [data-model.md](./data-model.md) and fields in `specs/001-exercise-app/contracts/storage-schema.json`
 - [x] T010 [P] Create `src/lib/timerMath.ts` exporting `remainingMsFromEndsAt(nowMs: number, endsAtMs: number): number` clamped at zero
-- [x] T011 Implement `src/lib/storage.ts` with `STORAGE_KEY` constant `rest-timer-session-v1`, `loadPersistedState()` / `savePersistedState()` using JSON parse/stringify, **manual validation** of required fields per `specs/001-bootstrap-session-timer/contracts/storage-schema.json`, and **safe clear + null return** on invalid or corrupt data; **missing or empty key MUST return null** (first run / no session) per [spec.md](./spec.md) scenario 1 and [contracts/README.md](./contracts/README.md); on save always set **updatedAt** (epoch ms) per [plan.md](./plan.md) § Storage, timestamps, and ordering
+- [x] T011 Implement `src/lib/storage.ts` with `STORAGE_KEY` constant `rest-timer-session-v1`, `loadPersistedState()` / `savePersistedState()` using JSON parse/stringify, **manual validation** of required fields per `specs/001-exercise-app/contracts/storage-schema.json`, and **safe clear + null return** on invalid or corrupt data; **missing or empty key MUST return null** (first run / no session) per [spec.md](./spec.md) scenario 1 and [contracts/README.md](./contracts/README.md); on save always set **updatedAt** (epoch ms) per [plan.md](./plan.md) § Storage, timestamps, and ordering
 - [x] T012 Implement `src/state/sessionReducer.ts` as a pure reducer with actions covering: hydrate from storage, **NEW_SESSION** (new `sessionId`, **sessionStartedAt** = now, clear prior continuable state), **CONTINUE_SESSION**, **START_REST** (durationMs, set `restEndsAt`), **REST_TICK** / wall-clock resync from `restEndsAt`, **REST_COMPLETE** (enter alarm), **REST_STOP** (cancel, no alarm; **append** `{ startedAt, endedAt, outcome: cancelled }` to **restRunLog**), **ALARM_DONE** → `exercise_idle` (**append** `restRunLog` entry with `outcome: completed` when rest finished via alarm), **END_WORKOUT** (`lifecycle: ended`), and **ignore START_REST** when phase is already `rest_running` per [research.md](./research.md); ensure **restRunLog** stays sorted by `startedAt` by appending in chronological order only
 - [x] T013 Create `src/hooks/useWorkoutSession.ts` using `useReducer` + `useEffect` to hydrate from `src/lib/storage.ts` on mount and persist on every material state change; when `loadPersistedState()` returns **null**, initialize to **entry / no continuable session** (no errors) per [spec.md](./spec.md) first-run edge case
 
@@ -96,8 +96,8 @@ description: "Task list for 001-bootstrap-session-timer feature implementation"
 
 - [x] T024 Add `public/icons/` with at least **192×192** and **512×512** maskable PNGs and update `public/manifest.webmanifest` `icons` entries to match
 - [x] T025 [P] Finalize `vite-plugin-pwa` config in `vite.config.ts` (scope, `manifest` injection) if using plugin; otherwise ensure manifest link tag in `index.html`
-- [x] T026 [P] Add or update **repository root** `README.md` with `npm run dev`, `npm run build`, `npm run preview`, and pointer to `specs/001-bootstrap-session-timer/quickstart.md` for HTTPS deploy and Safari test matrix
-- [x] T027 Execute manual checks in `specs/001-bootstrap-session-timer/quickstart.md` on **Safari macOS** and note gaps (iOS/Simulator as available)
+- [x] T026 [P] Add or update **repository root** `README.md` with `npm run dev`, `npm run build`, `npm run preview`, and pointer to `specs/001-exercise-app/quickstart.md` for HTTPS deploy and Safari test matrix
+- [x] T027 Execute manual checks in `specs/001-exercise-app/quickstart.md` on **Safari macOS** and note gaps (iOS/Simulator as available)
 
 ---
 
