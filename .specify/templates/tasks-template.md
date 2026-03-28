@@ -21,6 +21,8 @@ description: "Task list template for feature implementation"
 ## Path Conventions
 
 - **Single project**: `src/`, `tests/` at repository root
+- **React SPA (minimal)**: `src/` with entry + components per plan.md (e.g. Vite/React); static
+  build output for deploy; PWA assets as specified in plan
 - **Web app**: `backend/src/`, `frontend/src/`
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
 - Paths shown below assume single project - adjust based on plan.md structure

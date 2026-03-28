@@ -31,7 +31,19 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify against `.specify/memory/constitution.md` (Daily Exercise Time project):
+
+- **Rest timer / distance UX**: One active session made of a series of rest timers for pacing;
+  phone often laid flat—primary state and controls extremely large, readable from afar, easy to
+  hit; easy start, dominant stop; completion obvious at distance + optional bundled/web audio.
+- **Simplicity**: No unnecessary screens, entities, or integrations; YAGNI respected.
+- **No external runtime services**: No third-party APIs, analytics, hosted auth, or cloud sync in
+  the shipped app; data stays on device (web storage). Static asset hosting only.
+- **Minimal React SPA**: Single stable page shell; React used sparingly; vanilla CSS; no extra UI
+  frameworks without Complexity Tracking justification.
+- **Apple installable web**: Plan addresses Safari/WebKit and install / Add to Home Screen as needed.
+- **Phone-first, centered stage**: Phone is the primary target; tablet/desktop usable; main UI in
+  a centered max-width column on large viewports; tone may be playful without harming clarity.
 
 ## Project Structure
 

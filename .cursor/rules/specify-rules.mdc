@@ -1,0 +1,43 @@
+---
+description: Project Development Guidelines
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# firstone Development Guidelines
+
+Auto-generated from feature plans; **authoritative plan**: `specs/app-base/plan.md`. Last updated: 2026-03-28
+
+## Active Technologies
+- TypeScript (strict) — client and server; Node.js 20+ + React 19, Vite (SPA); `@auth0/auth0-spa-js` + Auth0 Universal Login (PKCE); **Fastify** HTTP API; **Drizzle ORM** + **`postgres`** driver; **Drizzle Kit** for migrations; `jose` or `jwks-rsa` for JWT validation (001-bootstrap-session-timer)
+- **PostgreSQL 15+** (primary, server truth); optional `localStorage`/IndexedDB client cache for resilience (v1: online-first) (001-bootstrap-session-timer)
+
+- **Auth0** (SPA PKCE) + **PostgreSQL** + **Drizzle ORM** + **Drizzle Kit** + **HTTP API** (JWT validated); contract: `specs/app-base/contracts/openapi.yaml`
+- **React 19**, **Vite**, TypeScript strict, **Node 20+**; optional client cache — server is source of truth (`specs/app-base`)
+- Constitution **Principle III** exception documented in `specs/app-base/plan.md` **Complexity Tracking** (amend constitution before release)
+
+## Project Structure
+
+```text
+src/           # Vite SPA
+server/        # API (target — scaffold in tasks)
+specs/app-base/
+```
+
+## Commands
+
+npm test && npm run lint
+
+## Code Style
+
+TypeScript (strict), Node 20+ for tooling: Follow standard conventions
+
+## Recent Changes
+- 001-bootstrap-session-timer: Added TypeScript (strict) — client and server; Node.js 20+ + React 19, Vite (SPA); `@auth0/auth0-spa-js` + Auth0 Universal Login (PKCE); **Fastify** HTTP API; **Drizzle ORM** + **`postgres`** driver; **Drizzle Kit** for migrations; `jose` or `jwks-rsa` for JWT validation
+
+- app-base: **Drizzle ORM** + **Drizzle Kit** locked for Postgres (not Prisma)
+- app-base (2026-03-28): Spec/plan amended for Auth0 + Postgres, workout sessions with exercise rows and rest intervals; OpenAPI v0.1 draft
+
+<!-- MANUAL ADDITIONS START -->
+
+<!-- MANUAL ADDITIONS END -->

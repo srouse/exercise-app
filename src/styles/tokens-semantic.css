@@ -1,0 +1,24 @@
+:root {
+  --color-surface: var(--color-neutral-900);
+  --color-surface-elevated: var(--color-neutral-700);
+  --color-text: var(--color-neutral-200);
+  --color-text-muted: var(--color-neutral-500);
+  --color-accent: var(--color-red-500);
+  --color-accent-hover: var(--color-red-400);
+  --color-alarm: var(--color-amber-400);
+  --color-alarm-surface: var(--color-red-500);
+  --color-success: var(--color-green-500);
+
+  --font-body: var(--font-step-2);
+  --font-timer: var(--font-step-5);
+  --font-label: var(--font-step-3);
+
+  /* Session countdown: large type + breathing room from edges (constitution I + VI) */
+  --timer-countdown-pad-inline: var(--space-4);
+  --timer-countdown-max: 10rem;
+
+  --touch-target-min: 56px;
+  --layout-max-width: 28rem;
+
+  --shadow-focus: 0 0 0 3px var(--color-accent);
+}

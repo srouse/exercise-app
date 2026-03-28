@@ -1,0 +1,52 @@
+.alarm-surface {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-alarm-surface);
+  padding: var(--space-5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .alarm-surface {
+    animation: alarm-pulse 0.9s ease-in-out infinite alternate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alarm-surface {
+    opacity: 1;
+    background: var(--color-alarm-surface);
+    box-shadow: inset 0 0 0 8px var(--color-alarm);
+  }
+}
+
+@keyframes alarm-pulse {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.25);
+  }
+}
+
+.alarm-surface-inner {
+  text-align: center;
+  width: 100%;
+  max-width: var(--layout-max-width);
+}
+
+.alarm-surface-title {
+  font-size: var(--font-step-5);
+  font-weight: 800;
+  color: var(--color-neutral-100);
+  margin: 0 0 var(--space-8);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+}
+
+.alarm-done-btn {
+  max-width: 20rem;
+  margin: 0 auto;
+}
