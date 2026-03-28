@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.spec/rest-timer/storage-session-v1",
+  "title": "RestTimerPersistedStateV1",
+  "description": "Client-only localStorage payload for workout session and rest timer (v1).",
+  "type": "object",
+  "required": ["schemaVersion", "sessionId", "lifecycle"],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sessionStartedAt": {
+      "type": "integer",
+      "description": "Epoch ms when this sessionId was created; stable ordering key for this workout"
+    },
+    "updatedAt": {
+      "type": "integer",
+      "description": "Epoch ms last persisted; bump on every save"
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": ["active", "ended"]
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "exercise_idle",
+        "rest_running",
+        "rest_alarm"
+      ]
+    },
+    "restDurationMs": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 3600000
+    },
+    "restEndsAt": {
+      "type": "integer",
+      "description": "Epoch milliseconds when current rest countdown ends; present if phase is rest_running"
+    },
+    "alarmActive": {
+      "type": "boolean",
+      "description": "True when rest completed and user must acknowledge Done"
+    },
+    "lastRestOutcome": {
+      "type": "string",
+      "enum": ["completed", "cancelled"]
+    },
+    "restRunLog": {
+      "type": "array",
+      "description": "Finished rest legs, chronological by startedAt; append on each completed or cancelled rest",
+      "items": {
+        "type": "object",
+        "required": ["startedAt", "endedAt", "outcome"],
+        "additionalProperties": false,
+        "properties": {
+          "startedAt": {
+            "type": "integer",
+            "description": "Epoch ms when this rest countdown started"
+          },
+          "endedAt": {
+            "type": "integer",
+            "description": "Epoch ms when rest ended (alarm or early stop)"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": ["completed", "cancelled"]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

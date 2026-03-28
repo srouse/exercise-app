@@ -1,0 +1,237 @@
+openapi: 3.1.0
+info:
+  title: Workout rest timer API
+  version: 0.1.0
+  description: >
+    Draft contract for Auth0-protected workout sessions, exercise records, and rest intervals.
+    Implementations MUST validate Bearer JWT (Auth0) on all paths except health.
+
+servers:
+  - url: https://api.example.com
+    description: Replace with deployment URL
+
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      security: []
+      responses:
+        '200':
+          description: OK
+
+  /v1/sessions:
+    post:
+      summary: Start a new workout session
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSession'
+    get:
+      summary: List sessions for current user (paginated — query params TBD)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkoutSession'
+
+  /v1/sessions/{sessionId}:
+    parameters:
+      - $ref: '#/components/parameters/sessionId'
+    get:
+      summary: Get session with exercises and rests (shape TBD — embed vs separate)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+    patch:
+      summary: End session or update metadata
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [ended]
+      responses:
+        '200':
+          description: Updated
+
+  /v1/sessions/{sessionId}/exercises:
+    parameters:
+      - $ref: '#/components/parameters/sessionId'
+    post:
+      summary: Record an exercise label for this session
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseRecordCreate'
+      responses:
+        '201':
+          description: Created
+
+  /v1/sessions/{sessionId}/rests:
+    parameters:
+      - $ref: '#/components/parameters/sessionId'
+    post:
+      summary: Start a rest interval
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestIntervalStart'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestInterval'
+
+  /v1/sessions/{sessionId}/rests/{restId}:
+    parameters:
+      - $ref: '#/components/parameters/sessionId'
+      - $ref: '#/components/parameters/restId'
+    patch:
+      summary: Complete or cancel a rest interval
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestIntervalEnd'
+      responses:
+        '200':
+          description: Updated
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Auth0 access token with appropriate audience
+
+  parameters:
+    sessionId:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    restId:
+      name: restId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    WorkoutSession:
+      type: object
+      required: [id, user_id, status, started_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [active, ended]
+        started_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    ExerciseRecordCreate:
+      type: object
+      required: [label]
+      properties:
+        label:
+          type: string
+          maxLength: 200
+        recorded_at:
+          type: string
+          format: date-time
+          description: Optional; server default now if omitted
+
+    RestIntervalStart:
+      type: object
+      required: [planned_duration_ms]
+      properties:
+        planned_duration_ms:
+          type: integer
+          minimum: 1
+        started_at:
+          type: string
+          format: date-time
+
+    RestIntervalEnd:
+      type: object
+      required: [outcome]
+      properties:
+        outcome:
+          type: string
+          enum: [completed, cancelled]
+        ended_at:
+          type: string
+          format: date-time
+
+    RestInterval:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+          format: uuid
+        planned_duration_ms:
+          type: integer
+        started_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+        outcome:
+          type: string
+          enum: [completed, cancelled]
+          nullable: true
