@@ -27,8 +27,39 @@ Added Sign out link to home screen and fixed dev server port to 43111. Reviewed 
 
 #### Next
 
-- Update Auth0 dashboard: set Allowed Callback URLs → `http://localhost:43111/auth/callback`, Allowed Logout URLs → `http://localhost:43111`
+- Update Auth0 dashboard: set Allowed Callback URLs → `APP_BASE_URL/auth/callback`, Allowed Logout URLs → `APP_BASE_URL`
 - Kill old Vite terminal, run `npm run dev` to boot Next.js
 - Deploy to Netlify (T048) once local auth flow confirms working
+
+---
+
+### [2026-03-29 — session 2]
+
+#### Summary
+
+Fixed three Netlify build blockers and merged the feature branch into main, making the app deployable.
+
+#### Changes
+
+- Features: none
+- Fixes: Redacted `APP_BASE_URL` and `AUTH0_DOMAIN` values from `plan.md` and session log files (Netlify secrets scan); renamed `middleware.ts` → `proxy.ts` (Next.js 16 deprecation)
+- Code: `specs/001-exercise-app/plan.md`, `.cursor/rules/session-log.md`, `session-log.md`, `middleware.ts` (deleted), `proxy.ts` (created)
+
+#### Spec Impact
+
+- status: none
+- refs: none
+- notes: Infrastructure/deployment fixes only
+
+#### Decisions
+
+- Redacted actual env var values from docs rather than disabling the scanner — keeps security posture correct
+- Used `proxy.ts` with standard `Request` type per Next.js 16 recommendation; `middleware.ts` still works but is deprecated
+
+#### Next
+
+- Confirm Netlify build passes secrets scan and compiles successfully
+- Update Auth0 dashboard callback to `APP_BASE_URL/auth/callback`
+- Test full login → home screen → new session → rest loop flow on production URL
 
 ---

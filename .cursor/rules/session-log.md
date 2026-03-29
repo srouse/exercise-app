@@ -2,12 +2,12 @@
 
 ## Previous Session
 
-- **What**: Implemented T001–T046 — Next.js 16, Auth0 v4, Drizzle/Neon, full rest loop, session list, PWA polish
-- **Why it matters**: App fully scaffolded end-to-end; Neon DB tables live; Auth0 gate in place
+- **What**: Added sign-out link; confirmed Auth0 v4 wiring; fixed dev port to 43111
+- **Why it matters**: Auth round-trip complete; users can log out
 - **Next step**: Was: update Auth0 dashboard callback URL, deploy to Netlify
 
 ## Current Session
 
-- **What**: Added "Sign out" link to home screen header (`/auth/logout`); confirmed auth wiring is correct (Auth0 v4 middleware, env vars, callback path `/auth/callback`)
-- **Why it matters**: Users can now log out; Auth0 dashboard callback URL clarified for v4 (`/auth/callback` not `/api/auth/callback`)
-- **Next step**: Update Auth0 dashboard — set callback to `APP_BASE_URL/auth/callback` and logout to `APP_BASE_URL`; kill old Vite terminal; run `npm run dev`
+- **What**: Fixed three Netlify build blockers — redacted secrets from `plan.md` and `session-log.md`; renamed `middleware.ts` → `proxy.ts` for Next.js 16; merged `001-exercise-app` into `main`
+- **Why it matters**: Netlify secrets scan now passes; deprecation warning gone; `main` is deployable
+- **Next step**: Confirm Netlify build succeeds; update Auth0 dashboard callback to `APP_BASE_URL/auth/callback`; test login flow on production URL
