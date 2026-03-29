@@ -180,11 +180,11 @@ All session/exercise/rest routes read the authenticated user from the Auth0 sess
 
 | Variable | Description |
 |----------|-------------|
-| `AUTH0_DOMAIN` | Auth0 tenant — `dev-ittwoijv.us.auth0.com` |
+| `AUTH0_DOMAIN` | Auth0 tenant domain (e.g. `your-tenant.us.auth0.com`) |
 | `AUTH0_CLIENT_ID` | Regular Web App client ID |
 | `AUTH0_CLIENT_SECRET` | Client secret (server-only, never sent to browser) |
 | `AUTH0_SECRET` | Session encryption key (`openssl rand -hex 32`) |
-| `APP_BASE_URL` | `http://localhost:43111` (local); production URL on deploy |
+| `APP_BASE_URL` | Base URL — local dev or production URL on deploy |
 | `NETLIFY_DATABASE_URL` | Neon Postgres connection string (pooled, `sslmode=require`) |
 
 Auth0 Dashboard must have `APP_BASE_URL/api/auth/callback` in **Allowed Callback URLs** and `APP_BASE_URL` in **Allowed Logout URLs**.
