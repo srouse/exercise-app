@@ -124,7 +124,7 @@ All decisions resolved in [research.md](research.md). Key outcomes:
 | Active session enforcement | One active session per user, enforced server-side on POST /api/sessions |
 | Session URL | `/session/[id]` — active opens workout view, ended opens detail view |
 | Offline strategy v1 | Online-first; mutations require successful API; retry queue deferred |
-| Default rest duration | 1 minute; presets 0.1 / 1 / 2 min |
+| Rest duration | Fixed at 1 minute — no user selection |
 | Duplicate start-rest | Ignore second tap (no parallel countdowns) |
 | Alarm audio | Bundled sound or Web Audio API beep; one on completion, repeat every ~2 s until Done; gated on prior user gesture |
 | Reduced motion | Sustained high-contrast full-surface state instead of flash |
@@ -180,11 +180,11 @@ All session/exercise/rest routes read the authenticated user from the Auth0 sess
 
 | Variable | Description |
 |----------|-------------|
-| `AUTH0_DOMAIN` | Auth0 tenant — `dev-ittwoijv.us.auth0.com` |
+| `AUTH0_DOMAIN` | Auth0 tenant domain (e.g. `your-tenant.us.auth0.com`) |
 | `AUTH0_CLIENT_ID` | Regular Web App client ID |
 | `AUTH0_CLIENT_SECRET` | Client secret (server-only, never sent to browser) |
 | `AUTH0_SECRET` | Session encryption key (`openssl rand -hex 32`) |
-| `APP_BASE_URL` | `http://localhost:43111` (local); production URL on deploy |
+| `APP_BASE_URL` | Base URL — local dev or production URL on deploy |
 | `NETLIFY_DATABASE_URL` | Neon Postgres connection string (pooled, `sslmode=require`) |
 
 Auth0 Dashboard must have `APP_BASE_URL/api/auth/callback` in **Allowed Callback URLs** and `APP_BASE_URL` in **Allowed Logout URLs**.

@@ -28,11 +28,11 @@ Each row shows enough to identify the session: date, time, and status (active or
 distinguished from ended sessions in the list. From this screen the user can:
 
 - **Open any session** -- active or ended -- by tapping its row. Entering an active session
-  resumes the live workout view. Entering an ended session shows its detail (exercises and rest
-  intervals logged). Both paths use the same tap gesture on the row.
+resumes the live workout view. Entering an ended session shows its detail (exercises and rest
+intervals logged). Both paths use the same tap gesture on the row.
 - **Start a new session** with a prominent **New** button. Pressing New creates a fresh session
-  server-side and immediately opens the active workout view. It does NOT automatically end any
-  prior session -- old sessions stay in the list in whatever state they were in.
+server-side and immediately opens the active workout view. It does NOT automatically end any
+prior session -- old sessions stay in the list in whatever state they were in.
 
 A session remains in the list indefinitely once created. Sessions are **never silently removed**
 by starting a new one. Only one session may be **active** at a time; the system MUST enforce
@@ -51,24 +51,24 @@ session is created and the list now shows three entries with the newest at the t
 **Acceptance Scenarios**:
 
 1. **Given** the signed-in user opens the app and has **no sessions** yet, **When** the home
-   screen loads, **Then** the list is empty, a **New** button is clearly available, and no error
+  screen loads, **Then** the list is empty, a **New** button is clearly available, and no error
    is shown.
 2. **Given** the user has one or more sessions, **When** the home screen loads, **Then** all
-   sessions appear sorted **most recent first** by start time, each showing date, time, and
+  sessions appear sorted **most recent first** by start time, each showing date, time, and
    status (active or ended).
 3. **Given** the user has an **active** session in the list, **When** they tap that row, **Then**
-   they enter the live workout view for that session and can continue the rest/exercise rhythm.
+  they enter the live workout view for that session and can continue the rest/exercise rhythm.
 4. **Given** the user has an **ended** session in the list, **When** they tap that row, **Then**
-   they see that session's detail (exercises and rest intervals logged) and can choose to resume
+  they see that session's detail (exercises and rest intervals logged) and can choose to resume
    it per planning.
 5. **Given** the user is on the home screen, **When** they tap **New**, **Then** a new session
-   is created server-side and they immediately enter the active workout view for that session.
+  is created server-side and they immediately enter the active workout view for that session.
 6. **Given** the user taps **New** while a session is already active, **When** the system
-   processes the request, **Then** it either prevents creating a second active session with a
+  processes the request, **Then** it either prevents creating a second active session with a
    clear message, or requires the user to end the current session first -- the behavior MUST be
    unambiguous and non-destructive (exact choice in planning).
 7. **Given** the user has multiple sessions, **When** they return to the home screen after any
-   action, **Then** the list reflects current server state (new sessions appear, status changes
+  action, **Then** the list reflects current server state (new sessions appear, status changes
    are reflected).
 
 ---
@@ -96,18 +96,18 @@ listed as ended.
 **Acceptance Scenarios**:
 
 1. **Given** the user is in an active session, **When** they start the between-exercises wait
-   timer, **Then** a countdown shows remaining time, updates continuously, and is **readable
+  timer, **Then** a countdown shows remaining time, updates continuously, and is **readable
    from a laid-flat device at arm's length**.
 2. **Given** the between-exercises countdown reaches zero, **When** the wait period ends,
-   **Then** an **alarm** occurs (highly visible at a glance; **one** audible cue when permitted,
+  **Then** an **alarm** occurs (highly visible at a glance; **one** audible cue when permitted,
    **then** repeated audible cues **every couple of seconds** until the user taps **Done**).
 3. **Given** the alarm is active, **When** the user taps **Done**, **Then** the rest phase clears
-   and they can do their next exercise and start another timer in the same session.
+  and they can do their next exercise and start another timer in the same session.
 4. **Given** the user had an in-progress session, **When** they leave and return (same or another
-   device, same account), **Then** session state is **restored from the server** when network and
+  device, same account), **Then** session state is **restored from the server** when network and
    auth are healthy.
 5. **Given** the user has completed their workout, **When** they choose to **end the session**,
-   **Then** the session is marked ended server-side and they return to the home screen where it
+  **Then** the session is marked ended server-side and they return to the home screen where it
    appears listed as ended.
 
 ---
@@ -129,10 +129,10 @@ after the next exercise when ready).
 **Acceptance Scenarios**:
 
 1. **Given** a between-exercises countdown is running, **When** the user uses the dominant
-   **stop** control, **Then** the countdown ends immediately, no completion alarm fires for that
+  **stop** control, **Then** the countdown ends immediately, no completion alarm fires for that
    run, and the session is ready for the user to continue their workout.
 2. **Given** the user stopped early, **When** they finish their next exercise and want another
-   rest, **Then** they can start a new between-exercises timer under the same rules as User
+  rest, **Then** they can start a new between-exercises timer under the same rules as User
    Story 2.
 
 ---
@@ -153,12 +153,12 @@ access to prior user's data from a fresh browser context.
 **Acceptance Scenarios**:
 
 1. **Given** the user is **not** signed in, **When** they attempt to open the main workout
-   experience, **Then** they are guided to **sign in** (or see a clear blocked state with sign-in
+  experience, **Then** they are guided to **sign in** (or see a clear blocked state with sign-in
    path) -- exact copy and routing per planning.
 2. **Given** the user completes Auth0 login successfully, **When** the app receives the session
-   per planning, **Then** subsequent **authorized** API calls succeed for **that** user's data.
+  per planning, **Then** subsequent **authorized** API calls succeed for **that** user's data.
 3. **Given** the user signs out (if offered) or session expires, **When** they try to sync or load
-   server session, **Then** the product fails safely (re-auth prompt or read-only local state per
+  server session, **Then** the product fails safely (re-auth prompt or read-only local state per
    planning) -- no silent cross-user bleed.
 
 ---
@@ -181,118 +181,118 @@ history** beyond a single browser profile.
 **Acceptance Scenarios**:
 
 1. **Given** a signed-in user starts a **new workout session** on the server, **When** the session
-   is created, **Then** it has a **stable server identifier** and **ownership** tied to that user.
+  is created, **Then** it has a **stable server identifier** and **ownership** tied to that user.
 2. **Given** an active session, **When** the user **records an exercise** (label + confirm per
-   planning), **Then** a **persisted exercise record** is created **linked to that session** with a
+  planning), **Then** a **persisted exercise record** is created **linked to that session** with a
    timestamp.
 3. **Given** an active session, **When** a **rest countdown starts**, **Then** a **rest interval**
-   record is created with **planned duration** and **start time**; **When** it ends (alarm + Done,
+  record is created with **planned duration** and **start time**; **When** it ends (alarm + Done,
    or Stop), **Then** the record is updated with **end time** and **outcome** (`completed` |
    `cancelled`).
 4. **Given** the user **ends** the workout, **When** the session is closed per planning, **Then**
-   the server marks the session **finished** and no new rests attach to it without a **new**
+  the server marks the session **finished** and no new rests attach to it without a **new**
    session.
 5. **Given** the user returns later on **another device** (same account), **When** they fetch
-   sessions, **Then** they see **their** historical sessions in the home screen list per US1.
+  sessions, **Then** they see **their** historical sessions in the home screen list per US1.
 
 ---
 
 ### Edge Cases
 
 - **Unauthenticated**: No server writes for another user's rows; session missing/expired MUST yield
-  clear **re-auth** or error states (User Story 4).
+clear **re-auth** or error states (User Story 4).
 - **Network unavailable mid-session**: The product MUST **fail safely** -- options include **optimistic
-  UI with retry queue**, **read-only degradation**, or **blocking** sensitive actions; exact
-  strategy in planning.
+UI with retry queue**, **read-only degradation**, or **blocking** sensitive actions; exact
+strategy in planning.
 - **First run / no sessions**: After sign-in, when there are **no** sessions yet, the user MUST
-  reach the home screen with an empty list and a clear **New** button -- no error shown (US1 scenario 1).
+reach the home screen with an empty list and a clear **New** button -- no error shown (US1 scenario 1).
 - **Duplicate active session**: If the user attempts to create a second active session, the system
-  MUST prevent it unambiguously (US1 scenario 6).
+MUST prevent it unambiguously (US1 scenario 6).
 - **Duplicate start-rest**: User attempts to start a countdown while one is already running --
-  behavior MUST be single and consistent (e.g. ignore; chosen in planning).
+behavior MUST be single and consistent (e.g. ignore; chosen in planning).
 - **Accessibility**: Where the platform exposes reduced motion, completion and alarm feedback
-  SHOULD remain noticeable without relying solely on motion (approach in planning).
+SHOULD remain noticeable without relying solely on motion (approach in planning).
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
 - **FR-001**: The product MUST **persist** workout **session state**, **rest intervals**, and
-  **recorded exercises** in **PostgreSQL** via an **application-owned API**, scoped by **authenticated
-  user** (Auth0 identity mapped to app user). Server records are the **source of truth** when online.
+**recorded exercises** in **PostgreSQL** via an **application-owned API**, scoped by **authenticated
+user** (Auth0 identity mapped to app user). Server records are the **source of truth** when online.
 - **FR-001a**: The product MUST integrate **Auth0** (Regular Web Application flow) for **sign-in**
-  and MUST pass **authorized session credentials** to the API on all mutating and session-loading
-  requests per planning.
+and MUST pass **authorized session credentials** to the API on all mutating and session-loading
+requests per planning.
 - **FR-002**: The home screen MUST display all of the user's sessions sorted by **most recent
-  first**, each showing date, time, and status (active or ended). The list MUST update to reflect
-  server state on each visit.
+first**, each showing date, time, and status (active or ended). The list MUST update to reflect
+server state on each visit.
 - **FR-003**: From the home screen the user MUST be able to **tap any session row** to open that
-  session -- entering the live workout view if active, or the detail view if ended.
+session -- entering the live workout view if active, or the detail view if ended.
 - **FR-004**: From the home screen the user MUST be able to tap **New** to create a new session
-  server-side and enter the active workout view immediately. Only one session may be active at a
-  time; the system MUST enforce this and surface a clear message if violated.
+server-side and enter the active workout view immediately. Only one session may be active at a
+time; the system MUST enforce this and surface a clear message if violated.
 - **FR-005**: In an active session, the user MUST be able to **start a between-exercises rest
-  countdown** with **remaining time** shown and updated until completion or early stop.
+countdown** with **remaining time** shown and updated until completion or early stop.
 - **FR-006**: When a between-exercises countdown **completes**, the product MUST raise an
-  **alarm**: **highly visible** at a glance from a typical viewing distance with the device on a
-  surface, plus **short audible feedback** when the platform allows: **one cue at the moment the
-  rest ends**, **then additional** short cues **approximately every couple of seconds until** the
-  user **dismisses** that alarm (e.g. **Done**). Repeating cues MUST **stop** when the alarm is
-  dismissed.
+**alarm**: **highly visible** at a glance from a typical viewing distance with the device on a
+surface, plus **short audible feedback** when the platform allows: **one cue at the moment the
+rest ends**, **then additional** short cues **approximately every couple of seconds until** the
+user **dismisses** that alarm (e.g. **Done**). Repeating cues MUST **stop** when the alarm is
+dismissed.
 - **FR-007**: After the alarm for a **completed** rest, the user MUST have a clear **Done** action
-  that dismisses the rest cycle and leaves them ready to continue the same session.
+that dismisses the rest cycle and leaves them ready to continue the same session.
 - **FR-008**: The user MUST be able to **stop** an in-progress countdown with a **single, dominant**
-  control suitable for **laid-flat, at-a-distance** use; stop MUST cancel that run and MUST NOT
-  fire the completion alarm.
+control suitable for **laid-flat, at-a-distance** use; stop MUST cancel that run and MUST NOT
+fire the completion alarm.
 - **FR-009**: The product MUST support **multiple** rest timer runs **in one session** (repeat:
-  exercise -> rest timer -> alarm or early stop -> Done -> next round).
+exercise -> rest timer -> alarm or early stop -> Done -> next round).
 - **FR-010**: Core loop controls (start rest, stop, Done, primary time display) MUST **not** depend
-  on small targets or dense layout; usability MUST meet **Principle I** of the constitution.
+on small targets or dense layout; usability MUST meet **Principle I** of the constitution.
 - **FR-011**: During an active session the user MUST be able to **end the workout session**; after
-  this action the session is **not** active and the user returns to the home screen. The ended
-  session remains in the list and is accessible via tap.
+this action the session is **not** active and the user returns to the home screen. The ended
+session remains in the list and is accessible via tap.
 - **FR-012**: The user MUST be able to **record an exercise** during an active session (minimal
-  **label or name** plus **timestamp**; free text vs presets in planning) so each **exercise row**
-  is **linked** to the **server workout session**.
+**label or name** plus **timestamp**; free text vs presets in planning) so each **exercise row**
+is **linked** to the **server workout session**.
 - **FR-013**: Each **rest interval** MUST be **persisted** with **planned duration**, **start** and
-  **end** timestamps (wall clock), and **outcome** (`completed` | `cancelled`), linked to the
-  **workout session**.
+**end** timestamps (wall clock), and **outcome** (`completed` | `cancelled`), linked to the
+**workout session**.
 
 ### Key Entities
 
 - **User (app)**: Maps **Auth0 subject** to internal `user_id`; owns all workout rows.
 - **Workout session (server)**: `active` vs `ended` lifecycle; **server id**; `started_at`; only
-  one active session per user at a time.
+one active session per user at a time.
 - **Exercise record**: User-visible **label**, **recorded_at**, **foreign key** to workout session.
 - **Rest interval (server)**: **planned_duration_ms**, **started_at**, **ended_at** (nullable until
-  finished), **outcome**; FK to workout session.
+finished), **outcome**; FK to workout session.
 
 ## Assumptions and Out of Scope
 
 - **Assumption**: **Auth0** tenant (Regular Web Application) and **Neon PostgreSQL** instance are
-  provisioned; secrets live in `.env`, not in repo.
+provisioned; secrets live in `.env`, not in repo.
 - **Assumption**: **HTTPS** everywhere; Netlify provides this automatically.
-- **Assumption**: Default rest duration and presets remain as in planning (e.g. **0.1 / 1 / 2**
-  min); countdown and alarm behavior unchanged per Principle I.
+- **Assumption**: Rest duration is **fixed at 1 minute** — no user selection or presets; countdown and alarm behavior unchanged per Principle I.
 - **Assumption**: API is implemented as **Next.js App Router route handlers** deployed to Netlify
-  (see plan.md); Drizzle ORM + Drizzle Kit for Postgres schema and migrations.
+(see plan.md); Drizzle ORM + Drizzle Kit for Postgres schema and migrations.
 - **Constitution**: Principle III amendment (v3.1.0) is in force; no further amendment needed.
 - **Out of scope (initial)**: **Social feeds**, **coach marketplace**, **program templates** beyond
-  simple exercise labels, **native mobile apps** (web-first remains), **third-party wearables**,
-  **billing**.
+simple exercise labels, **native mobile apps** (web-first remains), **third-party wearables**,
+**billing**.
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
 - **SC-001**: From the home screen, a user can **tap New**, **start one between-exercises timer**,
-  **reach alarm**, and tap **Done** using **at most five** deliberate interactions total.
+**reach alarm**, and tap **Done** using **at most five** deliberate interactions total.
 - **SC-002**: With a countdown running, **100%** of participants in a quick check can identify
-  **remaining time** and the **stop** control at arm's length with the device on a table (binary
-  pass/fail per participant).
+**remaining time** and the **stop** control at arm's length with the device on a table (binary
+pass/fail per participant).
 - **SC-003**: When a countdown is allowed to finish, **100%** of participants notice the **alarm**
-  within **3 seconds** without picking up the device (binary pass/fail per participant).
+within **3 seconds** without picking up the device (binary pass/fail per participant).
 - **SC-004**: After closing and reopening the product with **healthy network and auth**, the session
-  list loads and the user can re-enter an in-progress session in **>= 90%** of trial runs.
+list loads and the user can re-enter an in-progress session in **>= 90%** of trial runs.
 - **SC-005**: A user with multiple sessions can identify which is active and which are ended at a
-  glance from the home screen list without reading fine text -- verified by a quick observation test.
+glance from the home screen list without reading fine text -- verified by a quick observation test.
+

@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-5) 0;
+}
+
+.time {
+  font-size: var(--font-timer);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.time[data-alarm='true'] {
+  color: var(--color-alarm);
+}

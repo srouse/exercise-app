@@ -1,0 +1,9 @@
+# checkpoint rule
+
+When the user says "checkpoint":
+
+- Run session-log-rule.md
+- Do not ask questions
+- Do not explain steps
+- Execute all steps in order
+- Return only the final JSON output

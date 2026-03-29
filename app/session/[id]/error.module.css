@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-md);
+  padding: var(--space-6) var(--space-3);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.body {
+  font-size: var(--font-size-step-3);
+  color: var(--color-text-muted);
+}
+
+.home {
+  color: var(--color-accent);
+  font-size: var(--font-size-step-3);
+  font-weight: 500;
+}

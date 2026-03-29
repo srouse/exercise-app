@@ -1,10 +1,11 @@
 {
-  "name": "Rest Timer",
-  "short_name": "Rest",
-  "start_url": "/",
+  "name": "Exercise App",
+  "short_name": "Exercise",
+  "description": "Track your workout sessions with rest timers",
   "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#1a1a2e",
+  "start_url": "/",
+  "background_color": "#f8f9fa",
+  "theme_color": "#228be6",
   "icons": [
     {
       "src": "/icons/icon-192.png",

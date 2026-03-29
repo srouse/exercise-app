@@ -1,0 +1,48 @@
+/* Primitive tokens — raw scale values; no semantic meaning here */
+:root {
+  /* Spacing scale (4px base) */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 1rem;      /* 16px */
+  --space-4: 1.5rem;    /* 24px */
+  --space-5: 2rem;      /* 32px */
+  --space-6: 3rem;      /* 48px */
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+
+  /* Type scale (fluid, ~1.25 ratio) */
+  --font-size-step-1: 0.8rem;
+  --font-size-step-2: 1rem;
+  --font-size-step-3: 1.25rem;
+  --font-size-step-4: 1.563rem;
+  --font-size-step-5: 1.953rem;
+
+  /* Neutral ramp (light-mode friendly) */
+  --color-neutral-50:  #f8f9fa;
+  --color-neutral-100: #f1f3f5;
+  --color-neutral-200: #e9ecef;
+  --color-neutral-300: #dee2e6;
+  --color-neutral-400: #ced4da;
+  --color-neutral-500: #adb5bd;
+  --color-neutral-600: #868e96;
+  --color-neutral-700: #495057;
+  --color-neutral-800: #343a40;
+  --color-neutral-900: #212529;
+
+  /* Accent ramp */
+  --color-blue-400: #4dabf7;
+  --color-blue-500: #339af0;
+  --color-blue-600: #228be6;
+
+  /* Alarm ramp */
+  --color-red-400: #ff6b6b;
+  --color-red-500: #fa5252;
+  --color-red-600: #f03e3e;
+
+  /* Muted / success */
+  --color-green-400: #69db7c;
+  --color-green-500: #51cf66;
+}

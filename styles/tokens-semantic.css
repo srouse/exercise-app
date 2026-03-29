@@ -1,0 +1,49 @@
+/* Semantic tokens — product-meaning aliases over primitives */
+:root {
+  /* Surfaces */
+  --color-surface:        var(--color-neutral-50);
+  --color-surface-raised: #ffffff;
+  --color-border:         var(--color-neutral-200);
+
+  /* Text */
+  --color-text:        var(--color-neutral-900);
+  --color-text-muted:  var(--color-neutral-600);
+  --color-text-on-accent: #ffffff;
+
+  /* Accent (interactive) */
+  --color-accent:         var(--color-blue-600);
+  --color-accent-hover:   var(--color-blue-500);
+
+  /* Alarm surface — used for full-screen alarm overlay */
+  --color-alarm:          var(--color-red-500);
+  --color-alarm-text:     #ffffff;
+
+  /* Status badges */
+  --color-status-active:  var(--color-blue-600);
+  --color-status-ended:   var(--color-neutral-500);
+
+  /* Timer — large display font for arm's-length legibility (Principle I) */
+  --font-timer: clamp(4rem, 20vw, 9rem);
+
+  /* Touch targets — minimum 72px so controls hit from a laid-flat phone (Principle I) */
+  --touch-target-min: 4.5rem;  /* 72px */
+
+  /* Layout */
+  --layout-max-width: 36rem;   /* ~576px — phone-width column */
+
+  /* Focus ring */
+  --shadow-focus: 0 0 0 3px var(--color-blue-400);
+
+  /* Spacing aliases */
+  --gap-sm: var(--space-2);
+  --gap-md: var(--space-3);
+  --gap-lg: var(--space-5);
+  --pad-page: var(--space-3);
+}
+
+/* Reduced-motion: replace alarm flash with sustained high-contrast state */
+@media (prefers-reduced-motion: reduce) {
+  .alarm-flash {
+    animation: none !important;
+  }
+}
