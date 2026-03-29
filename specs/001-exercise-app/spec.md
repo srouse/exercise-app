@@ -194,6 +194,11 @@ history** beyond a single browser profile.
    session.
 5. **Given** the user returns later on **another device** (same account), **When** they fetch
   sessions, **Then** they see **their** historical sessions in the home screen list per US1.
+6. **Given** the user has logged exercises and rests in a session, **When** they view the **active**
+  workout screen or an **ended** session detail, **Then** they see one **chronological** list of
+  exercises and rests with **correct** rest copy (completed rests show **planned** duration;
+  cancelled rests show **elapsed** time from timestamps) and **visual** distinction between exercise
+  and rest rows.
 
 ---
 
@@ -212,6 +217,8 @@ MUST prevent it unambiguously (US1 scenario 6).
 behavior MUST be single and consistent (e.g. ignore; chosen in planning).
 - **Accessibility**: Where the platform exposes reduced motion, completion and alarm feedback
 SHOULD remain noticeable without relying solely on motion (approach in planning).
+- **Exercise picker layout**: Modal or sheet that lists preset exercises MUST remain **scrollable** and
+**fully visible** across viewports (no zero-height scroll regions that hide all choices).
 
 ## Requirements *(mandatory)*
 
@@ -257,6 +264,15 @@ is **linked** to the **server workout session**.
 - **FR-013**: Each **rest interval** MUST be **persisted** with **planned duration**, **start** and
 **end** timestamps (wall clock), and **outcome** (`completed` | `cancelled`), linked to the
 **workout session**.
+- **FR-014**: In **active** and **ended** session views, the product MUST show a **chronological**
+**activity list** of exercises and rest intervals from server data. **Rest** display MUST show
+**planned duration** for **completed** outcomes and **wall-clock elapsed** (start to end) for
+**cancelled** outcomes, with clear status wording. **Exercise** and **rest** rows MUST be
+**visually distinct**. The **same** list presentation SHOULD be **reused** across active session
+and session detail unless a strong UX reason dictates otherwise.
+- **FR-015**: **Log exercise** MUST offer **preset** exercise labels in a **grouped, scrollable**
+chooser; the UI MUST list **all** presets without layout failure (e.g. flex/scroll regions MUST not
+collapse to zero height).
 
 ### Key Entities
 

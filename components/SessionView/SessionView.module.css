@@ -45,11 +45,16 @@
 .container {
   display: flex;
   flex-direction: column;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
   gap: var(--gap-md);
   padding-top: var(--space-3);
 }
 
 .nav {
+  flex-shrink: 0;
   margin-bottom: var(--space-1);
 }
 
@@ -66,10 +71,31 @@
 
 /* ── Rest running ───────────────────────────────────────── */
 .restRunning {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.restRunningHeader {
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.restTimerCenter {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--gap-md);
+  justify-content: center;
+}
+
+.restRunningFooter {
+  flex-shrink: 0;
+  width: 100%;
+  padding-top: var(--space-2);
 }
 
 .phaseLabel {
@@ -97,9 +123,40 @@
 
 /* ── Exercise idle ──────────────────────────────────────── */
 .idleSection {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  gap: 0;
+}
+
+.idleTop {
   display: flex;
   flex-direction: column;
   gap: var(--gap-md);
+  flex-shrink: 0;
+}
+
+/* Session activity feed — narrow column, left-aligned, top + scroll */
+.activityRegion {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.activityScroll {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-2) 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  -webkit-overflow-scrolling: touch;
 }
 
 .startRestButton {
@@ -135,8 +192,8 @@
   width: 100%;
   background: var(--color-neutral-200);
   color: var(--color-text);
-  font-size: var(--font-size-step-3);
-  font-weight: 600;
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
@@ -152,8 +209,140 @@
   cursor: not-allowed;
 }
 
+/* ── Exercise picker modal (large rows — Principle I) ───── */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--space-3);
+}
+
+@media (min-width: 480px) {
+  .modalBackdrop {
+    align-items: center;
+  }
+}
+
+.modalSheet {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  /* Taller sheet = less scrolling; flex children scroll inside .modalScroll */
+  max-height: min(92dvh, 42rem);
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+  padding: var(--space-4) var(--space-3) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 480px) {
+  .modalSheet {
+    border-radius: var(--radius-lg);
+  }
+}
+
+.modalTitle {
+  flex-shrink: 0;
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+}
+
+/* max-height instead of flex:1 — auto-height sheet made flex:1 collapse to 0 */
+.modalScroll {
+  max-height: min(65dvh, 36rem);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-right: var(--space-1);
+}
+
+.modalGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.modalGroupLabel {
+  flex-shrink: 0;
+  font-size: var(--font-size-step-2);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modalList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.modalRow {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--font-size-step-3);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.1s, transform 0.05s;
+}
+
+.modalRow:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.modalRow:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.modalRow:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modalCancel {
+  flex-shrink: 0;
+  min-height: var(--touch-target-min);
+  width: 100%;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-step-3);
+  font-weight: 600;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.modalCancel:hover {
+  color: var(--color-text);
+  border-color: var(--color-neutral-400);
+}
+
 /* ── End session ────────────────────────────────────────── */
 .endButton {
+  flex-shrink: 0;
+  margin-top: var(--gap-md);
   min-height: var(--touch-target-min);
   width: 100%;
   background: transparent;

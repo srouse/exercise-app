@@ -93,3 +93,32 @@ Removed `APP_BASE_URL` from all env config files. Auth0 v4 infers the base URL f
 - Ensure Auth0 dashboard has both localhost and production Netlify URL in Allowed Callback/Logout URLs
 
 ---
+
+### [2026-03-29 — session 4]
+
+#### Summary
+
+Shipped a unified session activity timeline (active + detail), clearer rest row copy from timestamps, grouped exercise presets with a fixed picker sheet, and layout polish for the in-session feed.
+
+#### Changes
+
+- Features: `SessionActivityTimeline` shared component; color-coded exercise vs rest rows; chronological merge via `buildSessionTimeline`; `EXERCISE_PRESET_GROUPS` for log-exercise modal
+- Fixes: Rest labels show elapsed for cancelled and planned duration for completed; exercise picker scroll area no longer collapses (flex/max-height)
+- Code: `components/SessionActivityTimeline/*`, `lib/sessionTimeline.ts`, `lib/exercisePresets.ts`, `SessionView`/`SessionDetail`, `SessionView.module.css`, `globals.css`, `useWorkoutSession` touch-ups, `specs/001-exercise-app/spec.md`
+
+#### Spec Impact
+
+- status: updated
+- refs: FR-014, FR-015; US5 acceptance scenario 6; Edge Cases (exercise picker layout)
+- notes: Captures timeline semantics, reuse across views, and non-collapsing preset chooser
+
+#### Decisions
+
+- Single timeline component for active and ended sessions to avoid drift; rest copy centralized in `formatRestActivityLabel` / helpers
+- Modal scroll uses explicit `max-height` instead of `flex: 1` on an auto-height parent to avoid zero-height lists
+
+#### Next
+
+- Run full rest + log-exercise flow on device; confirm Netlify build if not already green
+
+---

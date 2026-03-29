@@ -15,7 +15,11 @@ interface WorkoutState {
 
 const FIXED_REST_MS = 60_000 // 1 minute fixed — no user selection
 
-export function useWorkoutSession(sessionId: string) {
+export function useWorkoutSession(
+  sessionId: string,
+  options?: { onSessionMutated?: () => void },
+) {
+  const onSessionMutated = options?.onSessionMutated
   const [state, setState] = useState<WorkoutState>({
     phase: 'exercise_idle',
     restId: null,
@@ -80,10 +84,11 @@ export function useWorkoutSession(sessionId: string) {
         remainingMs: FIXED_REST_MS,
       })
       startCountdown(startMs, FIXED_REST_MS)
+      onSessionMutated?.()
     } catch {
       setApiError('Network error — could not start rest')
     }
-  }, [sessionId, startCountdown])
+  }, [sessionId, startCountdown, onSessionMutated])
 
   const dismissAlarm = useCallback(async () => {
     stopAlarmLoop()
@@ -103,10 +108,11 @@ export function useWorkoutSession(sessionId: string) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ outcome: 'completed', ended_at: new Date().toISOString() }),
       })
+      onSessionMutated?.()
     } catch {
       // Non-blocking — rest row can be reconciled later
     }
-  }, [state, sessionId])
+  }, [state, sessionId, onSessionMutated])
 
   // T041: Stop rest early (outcome = cancelled)
   const stopRest = useCallback(async () => {
@@ -130,10 +136,11 @@ export function useWorkoutSession(sessionId: string) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ outcome: 'cancelled', ended_at: new Date().toISOString() }),
       })
+      onSessionMutated?.()
     } catch {
       // Non-blocking
     }
-  }, [state, sessionId])
+  }, [state, sessionId, onSessionMutated])
 
   return { state, apiError, startRest, dismissAlarm, stopRest }
 }

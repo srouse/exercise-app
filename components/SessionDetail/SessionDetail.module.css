@@ -1,4 +1,8 @@
 .container {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   gap: var(--gap-md);
@@ -36,67 +40,3 @@
   color: var(--color-text-muted);
 }
 
-.empty {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-step-3);
-  padding: var(--space-5) 0;
-  text-align: center;
-}
-
-.timeline {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.event {
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-}
-
-.exerciseEvent,
-.restEvent {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-}
-
-.eventTime {
-  font-size: var(--font-size-step-2);
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-}
-
-.exerciseLabel {
-  font-size: var(--font-size-step-3);
-  font-weight: 600;
-}
-
-.restInfo {
-  font-size: var(--font-size-step-3);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.restOutcome {
-  font-size: var(--font-size-step-1);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-}
-
-.restOutcome[data-outcome='completed'] {
-  background: var(--color-green-500);
-  color: white;
-}
-
-.restOutcome[data-outcome='cancelled'] {
-  background: var(--color-neutral-400);
-  color: white;
-}
