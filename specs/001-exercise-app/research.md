@@ -103,27 +103,37 @@ planning.
 
 ---
 
-## 8. Auth0 + SPA (2026-03-28, app-base amendment)
+## 8. Auth0 + Next.js (2026-03-28, amended 2026-03-28)
 
-**Decision**: **Auth0 Universal Login** + **@auth0/auth0-spa-js** (or current recommended SPA SDK)
-with **Authorization Code + PKCE**. API validates **access tokens** (JWT) via **JWKS** (`jwks-rsa` or
-`jose`).
+**Decision**: **Auth0 Universal Login** with **Authorization Code Flow** (Regular Web Application)
+using **`@auth0/nextjs-auth0`** SDK. The SDK handles the callback route, session cookie, and token
+refresh automatically. Client secret stays server-side in Netlify environment variables — never
+exposed to the browser.
 
-**Rationale**: Matches spec FR-001a; OIDC standard; avoids storing passwords in app.
+**Rationale**: `.env` is provisioned for a Regular Web App (has `AUTH0_CLIENT_SECRET`). The
+`@auth0/nextjs-auth0` SDK is purpose-built for this flow with Next.js App Router and requires
+minimal wiring. Tokens never touch the browser; session is a secure HTTP-only cookie.
 
-**Alternatives considered**: **Clerk**, **Supabase Auth**—rejected for this spec cycle because product
-direction names **Auth0** explicitly.
+**Alternatives considered**: **SPA + PKCE** (`@auth0/auth0-spa-js`) — rejected because the
+provisioned Auth0 app type is Regular Web App (client secret present); SPA flow would require
+re-registering the Auth0 app. **Clerk**, **Supabase Auth** — rejected, Auth0 explicitly chosen.
 
-## 9. API framework and ORM (2026-03-28; Drizzle locked 2026-03-28)
+## 9. Full-stack framework and API (2026-03-28, amended 2026-03-28)
 
-**Decision**: **Fastify** + **Drizzle ORM** + **`postgres`** package (recommended driver pairing in
-Drizzle docs) for Postgres access; **Drizzle Kit** for schema definitions and migrations.
+**Decision**: **Next.js 14+ App Router** replaces the Vite SPA + Fastify server split. API routes
+live in `app/api/` alongside the UI. **Drizzle ORM** + **`postgres`** driver retained for Neon
+Postgres access; **Drizzle Kit** for migrations. Deployed to **Netlify** via
+`@netlify/plugin-nextjs` (zero-config for App Router).
 
-**Rationale**: TypeScript-first, schema in code, generated SQL migrations stay reviewable; aligns
-with user choice.
+**Rationale**: One codebase, one deploy target — no separate Fastify process to run or host.
+Netlify Functions handle Next.js API routes natively. Auth0 Regular Web App flow integrates
+cleanly via `@auth0/nextjs-auth0` route handler at `app/api/auth/[auth0]/route.ts`. Drizzle ORM
+is framework-agnostic and works identically in Next.js Route Handlers.
 
-**Alternatives considered**: **Prisma**—not used for this project. **Next.js** full stack—deferred
-to avoid rewriting the current Vite SPA in one step.
+**Alternatives considered**: **Vite SPA + Fastify** (prior plan) — rejected because it required a
+separate server process, separate deploy target, and manual JWT validation; Regular Web App auth
+flow is a poor fit for a pure SPA. **Next.js + Vercel** — valid but Netlify is already
+provisioned with Neon integration.
 
 ## 10. PostgreSQL schema shape
 
