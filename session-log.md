@@ -63,3 +63,33 @@ Fixed three Netlify build blockers and merged the feature branch into main, maki
 - Test full login → home screen → new session → rest loop flow on production URL
 
 ---
+
+### [2026-03-29 — session 3]
+
+#### Summary
+
+Removed `APP_BASE_URL` from all env config files. Auth0 v4 infers the base URL from the request host, so the variable is unnecessary and was causing production redirects to bounce to localhost.
+
+#### Changes
+
+- Features: none
+- Fixes: Removed `APP_BASE_URL` from `.env` and `.env.example`; documented that Netlify dashboard env var should also be deleted
+- Code: `.env`, `.env.example`
+
+#### Spec Impact
+
+- status: none
+- refs: none
+- notes: Config cleanup only; no application behavior change
+
+#### Decisions
+
+- `APP_BASE_URL` not referenced anywhere in code — Auth0 v4 SDK reads it implicitly if present, which was causing the localhost redirect on production
+- Removing it entirely is cleaner than setting it per-environment; SDK dynamic inference handles all environments correctly
+
+#### Next
+
+- Confirm production login flow works end-to-end on Netlify URL
+- Ensure Auth0 dashboard has both localhost and production Netlify URL in Allowed Callback/Logout URLs
+
+---
