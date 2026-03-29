@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  padding-top: var(--space-4);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+
+.titleSkeleton,
+.buttonSkeleton,
+.rowSkeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-200) 25%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+.titleSkeleton {
+  height: 2rem;
+  width: 8rem;
+}
+
+.buttonSkeleton {
+  height: var(--touch-target-min);
+  width: 5rem;
+}
+
+.rowSkeleton {
+  height: var(--touch-target-min);
+  width: 100%;
+}

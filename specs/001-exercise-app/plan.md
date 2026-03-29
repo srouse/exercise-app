@@ -124,7 +124,7 @@ All decisions resolved in [research.md](research.md). Key outcomes:
 | Active session enforcement | One active session per user, enforced server-side on POST /api/sessions |
 | Session URL | `/session/[id]` — active opens workout view, ended opens detail view |
 | Offline strategy v1 | Online-first; mutations require successful API; retry queue deferred |
-| Default rest duration | 1 minute; presets 0.1 / 1 / 2 min |
+| Rest duration | Fixed at 1 minute — no user selection |
 | Duplicate start-rest | Ignore second tap (no parallel countdowns) |
 | Alarm audio | Bundled sound or Web Audio API beep; one on completion, repeat every ~2 s until Done; gated on prior user gesture |
 | Reduced motion | Sustained high-contrast full-surface state instead of flash |

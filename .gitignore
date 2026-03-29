@@ -1,16 +1,25 @@
 # Dependencies
 node_modules/
 
-# Build
+# Next.js build output
+.next/
+out/
+
+# Drizzle migrations journal (generated; commit the SQL files but not the snapshot state)
+# migrations/meta/  # Uncomment if you want to exclude snapshots
+
+# Build artifacts
 dist/
 build/
-*.local
 
-# Logs & env
+# Logs
 *.log
 npm-debug.log*
+
+# Environment — never commit real secrets
 .env
 .env.*
+!.env.example
 
 # OS & editors
 .DS_Store
@@ -21,3 +30,10 @@ Thumbs.db
 
 # Test / coverage
 coverage/
+
+# Netlify
+.netlify/
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,187 @@
+/* ── Alarm overlay ──────────────────────────────────────── */
+.alarmOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-alarm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-lg);
+  z-index: 100;
+  animation: alarmPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes alarmPulse {
+  from { filter: brightness(1); }
+  to   { filter: brightness(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alarmOverlay {
+    animation: none;
+  }
+}
+
+.alarmLabel {
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  color: var(--color-alarm-text);
+}
+
+.doneButton {
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-6);
+  background: white;
+  color: var(--color-alarm);
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  border-radius: var(--radius-lg);
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Main container ─────────────────────────────────────── */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  padding-top: var(--space-3);
+}
+
+.nav {
+  margin-bottom: var(--space-1);
+}
+
+.back {
+  color: var(--color-accent);
+  font-size: var(--font-size-step-3);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+/* ── Rest running ───────────────────────────────────────── */
+.restRunning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+.phaseLabel {
+  font-size: var(--font-size-step-3);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stopButton {
+  min-height: var(--touch-target-min);
+  width: 100%;
+  background: var(--color-neutral-800);
+  color: white;
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+}
+
+.stopButton:active {
+  background: var(--color-neutral-900);
+}
+
+/* ── Exercise idle ──────────────────────────────────────── */
+.idleSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.startRestButton {
+  min-height: var(--touch-target-min);
+  width: 100%;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.startRestButton:hover {
+  background: var(--color-accent-hover);
+}
+
+.startRestButton:active {
+  transform: scale(0.99);
+}
+
+/* ── Exercise log ───────────────────────────────────────── */
+.logExercise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.logButton {
+  min-height: var(--touch-target-min);
+  width: 100%;
+  background: var(--color-neutral-200);
+  color: var(--color-text);
+  font-size: var(--font-size-step-3);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.logButton:hover:not(:disabled) {
+  background: var(--color-neutral-300);
+}
+
+.logButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── End session ────────────────────────────────────────── */
+.endButton {
+  min-height: var(--touch-target-min);
+  width: 100%;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-step-3);
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.endButton:hover:not(:disabled) {
+  color: var(--color-red-600);
+  border-color: var(--color-red-400);
+}
+
+.endButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Error banner ───────────────────────────────────────── */
+.errorBanner {
+  padding: var(--space-2) var(--space-3);
+  background: #fff5f5;
+  border: 1px solid var(--color-red-400);
+  border-radius: var(--radius-md);
+  color: var(--color-red-600);
+  font-size: var(--font-size-step-2);
+}
