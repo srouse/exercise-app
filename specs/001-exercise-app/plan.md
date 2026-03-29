@@ -168,6 +168,27 @@ All mutating and session-loading routes require `Authorization: Bearer <Auth0 ac
 6. **Exercise UI**: Minimal single-label input between rest cycles — exact UX component in tasks (Principle I: large target, minimal friction).
 7. **PWA compatibility**: Ensure Auth0 allowed callback and logout URLs include deployed standalone origin; service worker must not cache auth redirects.
 
+## Environment configuration
+
+A `.env` file is provisioned at the repo root (gitignored). Key values for local development:
+
+| Variable | Description |
+|----------|-------------|
+| `NETLIFY_DATABASE_URL` | Neon PostgreSQL connection string (pooled, SSL required) |
+| `AUTH0_DOMAIN` | Auth0 tenant — `dev-ittwoijv.us.auth0.com` |
+| `AUTH0_CLIENT_ID` | Auth0 Regular Web Application client ID |
+| `AUTH0_CLIENT_SECRET` | Auth0 client secret |
+| `AUTH0_SECRET` | Long random string for session encryption |
+| `APP_BASE_URL` | `http://localhost:43111` (local); set to production URL on deploy |
+
+**Database**: Neon Postgres (serverless, pooled) — use `NETLIFY_DATABASE_URL` as the `DATABASE_URL` for Drizzle. Connection requires `sslmode=require`.
+
+**Auth0 app type**: Regular Web Application (not SPA) — uses server-side callback flow. Ensure `APP_BASE_URL/callback` is listed in Auth0 Allowed Callback URLs and `APP_BASE_URL` in Allowed Logout URLs.
+
+**Deployment**: Netlify. Add all `.env` variables as Netlify environment variables in the site dashboard (do not commit `.env` to the repo).
+
+See `.env.example` for the full variable list template.
+
 ## Phase 2
 
 Run `/speckit.tasks` -> generates `specs/001-exercise-app/tasks.md`.
