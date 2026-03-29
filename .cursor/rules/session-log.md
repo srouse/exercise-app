@@ -10,4 +10,4 @@
 
 - **What**: Added "Sign out" link to home screen header (`/auth/logout`); confirmed auth wiring is correct (Auth0 v4 middleware, env vars, callback path `/auth/callback`)
 - **Why it matters**: Users can now log out; Auth0 dashboard callback URL clarified for v4 (`/auth/callback` not `/api/auth/callback`)
-- **Next step**: Update Auth0 dashboard — set callback to `http://localhost:43111/auth/callback` and logout to `http://localhost:43111`; kill old Vite terminal; run `npm run dev`
+- **Next step**: Update Auth0 dashboard — set callback to `APP_BASE_URL/auth/callback` and logout to `APP_BASE_URL`; kill old Vite terminal; run `npm run dev`
