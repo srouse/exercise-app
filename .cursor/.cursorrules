@@ -1,23 +1,9 @@
-# Session Log Rule
+# checkpoint rule
 
-Always read `.cursor/rules/session-log.md` before responding.
+When the user says "checkpoint":
 
-When a meaningful unit of work is completed:
-
-- Move "Current Session" → "Previous Session"
-- Write a new "Current Session" with:
-  - What I did (1–2 bullets)
-  - Why it matters (1 bullet)
-  - Next step (1 bullet)
-
-Constraints:
-
-- Keep entries concise
-- Max ~300 characters per section
-- Do not add additional sections
-- Overwrite old content, do not append history
-
-Only update when:
-
-- the user says "checkpoint"
-- or a multi-step task is completed
+- Run session-log-rule.md
+- Do not ask questions
+- Do not explain steps
+- Execute all steps in order
+- Return only the final JSON output

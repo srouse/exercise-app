@@ -2,12 +2,12 @@
 
 ## Previous Session
 
-- **What**: Consolidated specs into `specs/001-exercise-app/`; amended constitution to v3.1.0
-- **Why it matters**: Single spec folder, constitution reflects approved Auth0 + Postgres stack
-- **Next step**: Was: run `/speckit.tasks`
+- **What**: Implemented T001–T046 — Next.js 16, Auth0 v4, Drizzle/Neon, full rest loop, session list, PWA polish
+- **Why it matters**: App fully scaffolded end-to-end; Neon DB tables live; Auth0 gate in place
+- **Next step**: Was: update Auth0 dashboard callback URL, deploy to Netlify
 
 ## Current Session
 
-- **What**: Switched architecture to Next.js App Router + Netlify Functions (replacing Vite SPA + Fastify); fleshed out spec US1 as the home/session list screen; renumbered all user stories; added `.env` config and auth flow details to plan
-- **Why it matters**: Architecture matches deployed stack (Netlify + Neon + Auth0 Regular Web App); spec now reflects the real first screen users see
-- **Next step**: Run `/speckit.tasks` to regenerate `specs/001-exercise-app/tasks.md` against the updated spec and plan, then begin Next.js scaffold
+- **What**: Added "Sign out" link to home screen header (`/auth/logout`); confirmed auth wiring is correct (Auth0 v4 middleware, env vars, callback path `/auth/callback`)
+- **Why it matters**: Users can now log out; Auth0 dashboard callback URL clarified for v4 (`/auth/callback` not `/api/auth/callback`)
+- **Next step**: Update Auth0 dashboard — set callback to `http://localhost:43111/auth/callback` and logout to `http://localhost:43111`; kill old Vite terminal; run `npm run dev`

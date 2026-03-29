@@ -40,6 +40,10 @@ export default function SessionList({ sessions }: Props) {
 
   return (
     <div className={styles.container}>
+      <nav className={styles.topNav}>
+        <a href="/auth/logout" className={styles.logoutLink}>Sign out</a>
+      </nav>
+
       <div className={styles.header}>
         <h1 className={styles.title}>Workouts</h1>
         <button
