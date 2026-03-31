@@ -1,0 +1,104 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.group {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-raised);
+}
+
+.groupHeader {
+  width: 100%;
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-step-3);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: var(--color-neutral-100);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.groupHeader:hover {
+  background: var(--color-neutral-200);
+}
+
+.groupHeader:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.groupTitle {
+  flex: 1;
+  min-width: 0;
+}
+
+.chevron {
+  flex-shrink: 0;
+  font-size: var(--font-size-step-2);
+  color: var(--color-text-muted);
+}
+
+.panel {
+  padding: var(--space-2) var(--space-2) var(--space-3);
+}
+
+.exerciseList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.exerciseRow {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-step-3);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-neutral-100);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.1s, border-color 0.1s, transform 0.05s;
+}
+
+.exerciseRow:hover {
+  background: var(--color-neutral-200);
+}
+
+.exerciseRow:active {
+  transform: scale(0.99);
+}
+
+.exerciseRow:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.exerciseRowActive {
+  border-color: var(--color-accent);
+  background: rgba(34, 139, 230, 0.12);
+  color: var(--color-accent);
+}
+
+.exerciseRow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

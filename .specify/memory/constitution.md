@@ -1,13 +1,9 @@
 <!--
 Sync Impact Report
-Version change: 3.0.0 → 3.1.0
-Modified principles:
-  - I. Rest intervals first → Laid flat, readable from afar; principle broadened from
-    rest-timer-specific guidance to a universal UX requirement applying to every screen and
-    interaction in the product.
-Templates requiring updates:
-  - .specify/templates/plan-template.md — Constitution Check bullet updated
-  - .specify/templates/spec-template.md — Constitution summary line updated
+Version change: 3.1.0 → 3.2.0
+Modified:
+  - Principle IV — Minimal React, coherent web shell (Next.js App Router explicitly allowed).
+  - Technology & Platform — Next.js Route Handlers + PostgreSQL; Netlify hosting; removed Vite/Fastify as canonical stack.
 Follow-up TODOs: None
 -->
 
@@ -51,15 +47,17 @@ of built assets (HTML/CSS/JS) is allowed and does not count as an "external serv
 **Rationale:** User identity and durable workout history justify server infrastructure; everything
 else adds privacy risk, reliability risk, and complexity without serving the core rest-timer job.
 
-### IV. Minimal React, single-page shell
+### IV. Minimal React, coherent web shell
 
-The product MUST ship as a **single-page application** with a stable top-level document: one
-primary view surface (no multi-page traditional navigation) unless the constitution is amended.
-**React** MAY be used **minimally**—only as much as needed for that SPA (no sprawling component
-trees or extra UI frameworks without Complexity Tracking justification). Styling MUST remain
+The product MUST ship as a **web application** with a **coherent shell**: one product experience
+with **minimal React** (no sprawling trees or extra UI frameworks without Complexity Tracking).
+**Next.js App Router** (or equivalent) MAY define a **small set of routes** (e.g. home, workout
+session); core flows MUST use **client-side navigation** within that shell rather than full
+document reloads for every step. This satisfies the intent of a **single focused product surface**
+without requiring a legacy separate API server + static SPA split. Styling MUST remain
 straightforward: **vanilla CSS** (global or per-component files) unless a tiny build step is
-unavoidable; avoid CSS-in-JS stacks and heavy design systems. **Rationale:** A stable SPA with
-light React matches "simple but structured"; keeps the codebase small and approachable.
+unavoidable; avoid CSS-in-JS stacks and heavy design systems. **Rationale:** One codebase for UI
+and route handlers; still simple and structured.
 
 ### V. Installable web on Apple platforms
 
@@ -82,13 +80,14 @@ are secondary.
 
 ## Technology & Platform Constraints
 
-- **Stack:** Minimal React SPA (Principle IV); vanilla CSS; JavaScript/TypeScript as needed for
-  React; a small bundler (for example Vite) is permitted to produce deployable static assets.
+- **Stack:** **Next.js** (App Router) with **minimal React** (Principle IV); **TypeScript** strict;
+  **vanilla CSS** (global + per-component modules). The framework bundler produces deployable assets.
 - **Identity:** Auth0 (or equivalent OIDC provider) for user authentication (Principle III).
-- **Data:** Application-owned API (Fastify) + PostgreSQL for server-side persistence (Principle III);
-  client-side cache (localStorage/IndexedDB) is optional for resilience only — server is source of truth.
-- **Hosting:** Static hosting of SPA assets + HTTPS API hosting are permitted; HTTPS required so
-  install/PWA behaviors work reliably on Apple platforms.
+- **Data:** Application-owned **HTTP API** implemented as **Next.js Route Handlers** (or equivalent)
+  co-located with the app, plus **PostgreSQL** for server-side persistence (Principle III);
+  client-side cache (localStorage/IndexedDB) is optional for resilience only — **server is source of truth**.
+- **Hosting:** **Netlify** (or comparable HTTPS hosting for the Next.js adapter) as specified in the
+  feature plan; HTTPS required so install/PWA behaviors work reliably on Apple platforms.
 - **Testing:** Manual verification in Safari (iOS and macOS) is the default acceptance path;
   automated tests are OPTIONAL unless the feature spec requests them.
 
@@ -116,4 +115,4 @@ principles before merge or release; runtime development guidance may live in `RE
 
 for every action you do, look into command `/test` and do what it requests.
 
-**Version**: 3.1.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-28
+**Version**: 3.2.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-30

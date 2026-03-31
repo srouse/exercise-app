@@ -50,9 +50,9 @@ Use **HTTPS** or **tunnel** for Auth0 callbacks on real devices (see Auth0 **All
 |-------|--------|
 | Login / logout | Auth0 universal page; return to app |
 | New session | `POST /v1/sessions` creates row |
-| Start rest | Creates `rest_interval`; timer UI unchanged |
-| Stop / Done | `PATCH` rest with outcome |
-| Record exercise | `POST` exercise with label |
+| In-session flow | Accordion: pick exercise → **Complete** → app chains `POST .../exercises` then `POST .../rests`; no separate “Start rest” / “Log exercise” |
+| Stop / Done | **Stop** or alarm **Done** → `PATCH` rest with outcome; returns to catalog |
+| Delete session | **Delete** on session screen → `DELETE /api/sessions/[id]` → **204** when allowed (FR-020) |
 | Multi-device | Same user, second browser, list/get session |
 
 ## Constitution

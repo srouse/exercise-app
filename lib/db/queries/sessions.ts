@@ -54,3 +54,12 @@ export async function endSession(id: string, userId: string): Promise<WorkoutSes
     .returning()
   return updated ?? null
 }
+
+/** Removes the session row; exercise_records and rest_intervals cascade. */
+export async function deleteSession(id: string, userId: string): Promise<boolean> {
+  const removed = await db
+    .delete(workoutSessions)
+    .where(and(eq(workoutSessions.id, id), eq(workoutSessions.userId, userId)))
+    .returning({ id: workoutSessions.id })
+  return removed.length > 0
+}

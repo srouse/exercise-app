@@ -11,6 +11,8 @@ description: "Task list for 001-exercise-app feature implementation"
 
 **Organization**: Phases follow spec user story priorities. Auth (US4) comes first as it blocks all other stories. Each phase is independently testable.
 
+**Evolution (2026-03-30):** [spec.md](./spec.md) now defines a **daisy-chained** active session (accordion catalog, **no** standalone **Log exercise** / **Start rest**, **FR-019**). **Phase 9** is the implementation track for that revision. Phases 5–8 remain the delivered baseline (APIs, prior `SessionView`); Phase 9 refactors client UX and hook state to match the revised **US2** / **US3**.
+
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies on incomplete tasks)
@@ -127,6 +129,8 @@ description: "Task list for 001-exercise-app feature implementation"
 
 ## Phase 6: User Story 2 — Rest loop: timer, alarm, Done (Priority: P1)
 
+> **Historical baseline (shipped):** Tasks T034–T040 implemented **Start Rest**, **Log Exercise**, and modal flow. **Revised spec** (**FR-005**, **FR-019**, US2) **removes** those as primary UX — **Phase 9** refactors `SessionView` + `useWorkoutSession` to the **daisy-chained accordion** model. Keep this phase as a record of what was built and which APIs/timer/alarm pieces Phase 9 reuses.
+
 **Goal**: Inside an active session, user can start a rest countdown, see alarm fire, tap Done, and repeat.
 
 **Independent Test**: Enter an active session. Tap Start Rest (1 min preset). Countdown visible at arm's length from a laid-flat phone. Let it run to zero — alarm: full-screen flash + audio beep repeating. Tap Done — alarm clears, session ready for next rest. Reload mid-rest — session state restored. End session — return to home screen.
@@ -165,9 +169,11 @@ description: "Task list for 001-exercise-app feature implementation"
 
 ## Phase 7: User Story 3 — Stop rest timer early (Priority: P2)
 
+> **Post–Phase 9:** `stopRest` transitions to **`catalog`** (revised spec **FR-008**); **T054** updates the hook. Phase 7 tasks below reflect the **baseline** `exercise_idle` naming.
+
 **Goal**: User can cancel an in-progress countdown before it completes; no alarm fires for that run.
 
-**Independent Test**: Start rest countdown. Tap Stop before zero. Confirm: countdown ends immediately, no alarm fires, no audio plays, session is in `exercise_idle` phase ready for next action.
+**Independent Test**: Start rest countdown. Tap Stop before zero. Confirm: countdown ends immediately, no alarm fires, no audio plays, session is in `exercise_idle` phase ready for next action (after Phase 9: **catalog**).
 
 - [x] T041 Add `stopRest()` action in `hooks/useWorkoutSession.ts`: cancel any running alarm interval immediately; call `PATCH /api/sessions/[id]/rests/[rid]` with `outcome=cancelled` and current timestamp as `ended_at`; transition phase to `exercise_idle`
 - [x] T042 Verify **Stop** button in `components/SessionView/index.tsx` calls `stopRest()` and that no alarm audio is triggered when stop precedes zero; confirm `rest_intervals.outcome = 'cancelled'` in Neon after stopping
@@ -189,6 +195,48 @@ description: "Task list for 001-exercise-app feature implementation"
 
 ---
 
+## Phase 9: Evolution — Daisy-chained catalog + accordion (revised US2 / US3 / FR-016–019)
+
+**Goal**: Replace manual **Start Rest** + modal **Log exercise** with **accordion** preset catalog, **one active** exercise, **Complete** → `POST /exercises` then `POST /rests` (auto chain), **Stop** → catalog, **Done** after alarm → catalog. **FR-019**: no standalone log/start primary controls.
+
+**Prerequisites**: Phases 1–8 APIs and auth remain valid; no new DB tables required for v1 ([plan.md](./plan.md) Evolution section).
+
+**Independent Test** (from spec US2): Open active session — **no** “Log exercise” or “Start rest”. First accordion group expanded by default; single-expand behavior. Select exercise → **Complete** → rest auto-starts. Alarm → **Done** → catalog. **Stop** mid-rest → catalog. Reload mid-rest → restore timer; reload in catalog → no phantom selection (v1).
+
+### Accordion + presets
+
+- [x] T049 [US2] Add `components/ExerciseAccordion/index.tsx` and `components/ExerciseAccordion/ExerciseAccordion.module.css`: render groups from `lib/exercisePresets.ts`; **exactly one** panel expanded at a time (accordion); **first** group expanded on mount; headers are large touch targets with `aria-expanded` / `aria-controls` (or `details`/`summary` + JS to enforce single-open); exercise rows tappable to select **active** exercise (callback prop)
+
+- [x] T050 [P] [US2] Adjust first group title in `lib/exercisePresets.ts` to warm-up-oriented label (e.g. `WARM-UP` or `Warm-up`) per **FR-017**; keep individual exercise **name strings** stable for server `label` persistence unless product explicitly renames them
+
+### Client state + SessionView
+
+- [x] T051 [US2] Refactor `hooks/useWorkoutSession.ts`: phases `catalog` | `exercise_active` | `rest_running` | `rest_alarm` (replace `exercise_idle`); expose `selectActiveExercise(label)`, `completeCurrentExercise()` (sequential `POST /api/sessions/[id]/exercises` then `POST /api/sessions/[id]/rests` with fixed `planned_duration_ms`, disable double-submit, surface error if second call fails without duplicate exercise per planning); `dismissAlarm` → `catalog`; restore: open rest from server → `rest_running`/`rest_alarm`, else `catalog`
+
+- [x] T052 [US2] Refactor `components/SessionView/index.tsx`: remove **Start Rest**, **Log Exercise**, and exercise-picker modal; mount `ExerciseAccordion` in `catalog` and `exercise_active`; show prominent **current exercise** strip + **Complete** in `exercise_active`; during `rest_running`/`rest_alarm` hide accordion per [plan.md](./plan.md) recommendation; keep `TimerDisplay`, **Stop**, alarm overlay, **End session**, `SessionActivityTimeline`, `DeleteSessionButton` as applicable
+
+- [x] T053 [P] [US2] Update `components/SessionView/SessionView.module.css` for accordion + active strip layout; maintain Principle I (`--touch-target-min`, legible timer)
+
+- [x] T054 [US3] Update `stopRest()` in `hooks/useWorkoutSession.ts` to transition to **`catalog`** (not legacy idle); verify `components/SessionView/index.tsx` shows accordion after stop with **FR-019** still satisfied
+
+- [x] T055 [US2] Implement **switching active exercise** rule in `components/SessionView/index.tsx` (and hook if needed): e.g. replacing selection **without** server write until **Complete**; document in file comment per spec edge case
+
+### Contracts, docs, validation
+
+- [x] T056 [P] Update `specs/001-exercise-app/contracts/openapi.yaml` (or `contracts/README.md`) with a short note that clients chain `POST .../exercises` then `POST .../rests` on completion — no new endpoint required for v1
+
+- [x] T057 [P] Update `specs/001-exercise-app/quickstart.md` manual flow: remove Start Rest / Log Exercise steps; document accordion + Complete + auto rest
+
+- [ ] T058 Polish: Execute spec **US2** Independent Test and **SC-001** count on device; confirm **FR-019** (no primary log/start buttons)
+
+- [ ] T059 [P] After Phase 9 UI ships, re-run **T047** / **T048** Safari and Netlify checks if behavior changed materially
+
+### Session delete (spec alignment)
+
+- [x] T060 [P] [US1] Document `DELETE /api/sessions/[id]` (204, ownership-enforced) in `specs/001-exercise-app/contracts/openapi.yaml` (or `contracts/README.md`) and add a **delete** smoke step to `specs/001-exercise-app/quickstart.md` per **FR-020**
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -201,14 +249,15 @@ description: "Task list for 001-exercise-app feature implementation"
 - **Phase 6 (US2 — Rest loop)**: Depends on Phases 4 + 5
 - **Phase 7 (US3 — Stop early)**: Depends on Phase 6
 - **Phase 8 (Polish)**: Depends on Phases 6 + 7
+- **Phase 9 (Evolution — chained UX)**: Depends on Phases 6–8 baseline existing; **refactors** `SessionView` + `useWorkoutSession` without removing API routes from Phase 5
 
 ### User Story Dependencies
 
 - **US4 (Sign in)**: Must be first — no workout data is accessible without auth
 - **US1 (Home screen)**: Depends on US4; independent of US2/US5
 - **US5 (Server records)**: Depends on US4; can proceed in parallel with US1
-- **US2 (Rest loop)**: Depends on US1 (session routing) + US5 (rest/exercise API routes)
-- **US3 (Stop early)**: Depends on US2 (adds stop to existing timer hook)
+- **US2 (Rest loop)**: Depends on US1 (session routing) + US5 (rest/exercise API routes); **Phase 9** updates US2 UX while keeping same APIs
+- **US3 (Stop early)**: Depends on US2; **T054** aligns stop → **catalog** with revised spec
 
 ### Parallel Opportunities
 
@@ -217,6 +266,17 @@ Within Phase 2: T014, T015, T016, T017, T018 in parallel after T013
 Within Phase 4: T026, T027 in parallel after T024
 Within Phase 5: T029, T030, T031, T032 in parallel
 Within Phase 6: T035, T036, T040 in parallel; T037 after T034+T036
+Within Phase 9: T050, T053, T056, T057, T059 in parallel after T049; T051 before T052 and T054; T052 depends on T049+T051; T054 after T051; T055 can follow T054; T058 after T052+T054+T055
+
+### Parallel Example: Phase 9 (after T049)
+
+```bash
+# Together:
+T050 lib/exercisePresets.ts
+T053 SessionView.module.css
+T056 contracts/openapi.yaml
+T057 quickstart.md
+```
 
 ---
 
@@ -238,8 +298,9 @@ Within Phase 6: T035, T036, T040 in parallel; T037 after T034+T036
 3. Phase 6 → rest loop UI (timer + alarm + exercise logging)
 4. Phase 7 → stop early
 5. Phase 8 → polish + production deploy
+6. **Phase 9** → daisy-chained accordion UX (revised US2/US3/FR-019) — refactor `SessionView` + `useWorkoutSession`
 
-### Total Tasks: 48
+### Total Tasks: 60
 
 | Phase | Tasks | User Story |
 |-------|-------|------------|
@@ -248,6 +309,7 @@ Within Phase 6: T035, T036, T040 in parallel; T037 after T034+T036
 | Phase 3 | T019–T023 | US4 (Sign in) |
 | Phase 4 | T024–T028 | US1 (Home screen) |
 | Phase 5 | T029–T033 | US5 (Server records) |
-| Phase 6 | T034–T040 | US2 (Rest loop) |
-| Phase 7 | T041–T042 | US3 (Stop early) |
+| Phase 6 | T034–T040 | US2 (Rest loop — baseline) |
+| Phase 7 | T041–T042 | US3 (Stop early — baseline) |
 | Phase 8 | T043–T048 | Polish |
+| Phase 9 | T049–T060 | US2 / US3 (evolution) + FR-020 docs |

@@ -1,6 +1,6 @@
 /**
- * Preset exercises for the log-exercise picker (grouped, large-touch UI).
- * Order matches your routine; labels are stored as logged on the server.
+ * Preset exercises for the in-session accordion (grouped, large-touch UI).
+ * Order matches your routine; exercise name strings are stored as logged on the server.
  */
 export type ExercisePresetGroup = {
   label: string
@@ -9,7 +9,7 @@ export type ExercisePresetGroup = {
 
 export const EXERCISE_PRESET_GROUPS: readonly ExercisePresetGroup[] = [
   {
-    label: 'STRETCH',
+    label: 'WARM-UP',
     exercises: [
       'Chair Rotation',
       'Overhead Arm Reach',

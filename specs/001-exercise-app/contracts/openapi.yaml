@@ -6,6 +6,8 @@ info:
     Draft contract for Auth0-protected workout sessions, exercise records, and rest intervals.
     Implementations MUST validate Bearer JWT (Auth0) on all paths except health.
 
+    **Completion (v1 app)**: On “complete exercise”, clients call `POST .../exercises` then `POST .../rests` in sequence; no composite endpoint is required.
+
 servers:
   - url: https://api.example.com
     description: Replace with deployment URL
@@ -76,6 +78,15 @@ paths:
       responses:
         '200':
           description: Updated
+    delete:
+      summary: Delete session (ownership-enforced, FR-020)
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
 
   /v1/sessions/{sessionId}/exercises:
     parameters:

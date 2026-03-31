@@ -191,13 +191,14 @@ Auth0 Dashboard must have `APP_BASE_URL/api/auth/callback` in **Allowed Callback
 
 ## Complexity Tracking
 
-> No constitution violations — Auth0 + PostgreSQL permitted under Principle III (v3.1.0). Session list adds one screen but is YAGNI-compliant (required for the product to make sense).
+> Constitution **v3.2.0**: Principle IV and Technology section explicitly allow **Next.js App Router** + Route Handlers + PostgreSQL (aligned with this plan). Auth0 + PostgreSQL remain permitted under Principle III.
 
 | Consideration | Decision | Rationale |
 |---------------|----------|-----------|
 | Network dependency for writes | Online-first v1; retry queue deferred to v2 | Spec mandates server durability; full offline queue is v2 scope. |
 | Existing Vite SPA scaffold | Replaced by Next.js | Vite scaffold was not yet production-integrated; switching now is lower cost than migrating later. |
 | Session list pagination | Deferred to v2 | Single user; row volume stays small in v1; add when list grows unwieldy. |
+| Constitution “single SPA” vs App Router routes | **Resolved in constitution v3.2.0** — coherent shell + client navigation | Prior literal SPA wording superseded; feature plan is authoritative for stack. |
 
 ## Implementation notes for tasks phase
 
@@ -215,3 +216,56 @@ Auth0 Dashboard must have `APP_BASE_URL/api/auth/callback` in **Allowed Callback
 ## Phase 2
 
 Run `/speckit.tasks` -> generates `specs/001-exercise-app/tasks.md`.
+
+---
+
+## Evolution: Chained exercise catalog + accordion (spec revision 2026-03-30)
+
+**Spec pull**: US2, FR-005/007–010/012/015–018, edge cases, SC-001 — primary session flow is now
+**catalog → active exercise → complete → auto rest → alarm/Done → catalog**, with an **accordion**
+for preset groups (single expansion, first group open by default).
+
+### Product summary
+
+| Before | After |
+|--------|--------|
+| **Start Rest** and **Log exercise** as separate buttons | **Removed** — no standalone controls; **only** daisy-chained events (US2, **FR-019**) |
+| Manual **Start Rest** as primary path | Rest **starts automatically** when user **completes** current exercise |
+| Exercise picked from **modal** | **Full accordion catalog** on the active session surface (**no** log-only modal) |
+| Flat / modal list | **Accordion** by category; **one** panel open at a time; **first** group default open |
+| “Log exercise” separate from rest | **Single completion** chains **POST exercise** + **POST rest** (order and atomicity in API design below) |
+
+### Implementation plan (ordered)
+
+1. **Client state machine** (`useWorkoutSession` or successor): Model explicit phases aligned with spec — e.g. `catalog` | `exercise_active` | `rest_running` | `rest_alarm`. Transitions: select exercise → `exercise_active`; completion → call APIs → `rest_running`; stop → `catalog`; alarm dismissed → `catalog`. Ensure **no parallel** rest timers client-side.
+
+2. **Accordion UI**: New presentational + behavior component (vanilla CSS; prefer **`details`/`summary`** per group with JS to enforce **single-open** accordion, or button + `aria-expanded` + panels — match FR-016/017 and edge-case **a11y**). Data source: existing `EXERCISE_PRESET_GROUPS`; optionally **rename** first group label to “Warm-up” in config for copy parity with spec.
+
+3. **SessionView layout**: Replace modal-first exercise picking with **persistent** accordion region + **prominent** “current exercise” strip (label + **Complete**). During `rest_running` / `rest_alarm`, reuse existing timer/alarm surfaces; catalog can be hidden or de-emphasized per UX sketch (recommend: **hide** catalog during rest/alarm to reduce mistakes).
+
+4. **API sequencing on completion**: On **Complete**, client should **record exercise** then **start rest** (existing `POST .../exercises` and `POST .../rests`). Define behavior if the first succeeds and second fails: show **error**, allow **retry** start-rest, avoid duplicate exercise rows (idempotency key or server rule — **decision** in tasks; minimal v1: disable double-submit + surface error).
+
+5. **Remove Log exercise + Start Rest UI**: Delete both standalone buttons entirely per **FR-019**; keep **Stop** (rest), **Done** (alarm), **End session**, and catalog/completion affordances only. Implementation MUST NOT leave duplicate paths that start rest or log outside the chain.
+
+6. **Reload / resume**: Extend restore logic: if server has an **open** rest (`ended_at` null, started), resume `rest_running` or `rest_alarm` from timestamps; else show **catalog**. **Current exercise selection** is client-held unless we add optional `workout_sessions` column later — v1 acceptable to **clear selection** on reload if ambiguous.
+
+7. **Switching active exercise** (**normative v1**): If the user taps a **different** preset while one
+   is already **active** (before **Complete**), the client **replaces** the active selection **with no
+   server write**; only **Complete** persists the exercise and starts rest. **Exactly one** active
+   selection at a time — no ambiguous “two actives” UI.
+
+8. **Session activity timeline**: Keep `SessionActivityTimeline`; ordering still chronological from server.
+
+9. **Contracts & tasks**: Update `contracts/openapi.yaml` and `tasks.md` when implementation starts — no behavioral change to REST resources required beyond client call order; optional **batch** endpoint (`POST .../complete-exercise`) is a **later** optimization (YAGNI for v1).
+
+10. **Principle I pass**: Accordion headers and exercise rows remain **large touch targets**; avoid dense multi-column catalog on phone.
+
+### Constitution re-check
+
+| Gate | Notes |
+|------|--------|
+| I | Accordion + complete + timer surfaces must stay **large** and **legible** laid flat. |
+| II | No new tables for v1; batch API deferred. |
+| IV–VI | Vanilla CSS accordion; phone-first column. |
+
+After shipping, re-run manual **Independent Test** in US2/US3 and update **SC-001** if measured steps differ.

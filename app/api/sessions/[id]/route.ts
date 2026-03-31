@@ -1,6 +1,6 @@
 import { auth0 } from '@/lib/auth0'
 import { upsertUser } from '@/lib/db/queries/users'
-import { getSession, endSession } from '@/lib/db/queries/sessions'
+import { getSession, endSession, deleteSession } from '@/lib/db/queries/sessions'
 
 interface Params {
   params: Promise<{ id: string }>
@@ -33,4 +33,16 @@ export async function PATCH(req: Request, { params }: Params) {
   if (!updated) return Response.json({ error: 'not_found' }, { status: 404 })
 
   return Response.json(updated)
+}
+
+export async function DELETE(_req: Request, { params }: Params) {
+  const { id } = await params
+  const session = await auth0.getSession()
+  if (!session) return Response.json({ error: 'unauthorized' }, { status: 401 })
+
+  const user = await upsertUser(session.user.sub, session.user.email)
+  const ok = await deleteSession(id, user.id)
+  if (!ok) return Response.json({ error: 'not_found' }, { status: 404 })
+
+  return new Response(null, { status: 204 })
 }

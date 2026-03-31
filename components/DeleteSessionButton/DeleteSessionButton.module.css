@@ -1,0 +1,133 @@
+.button {
+  width: 100%;
+  min-height: var(--touch-target-min);
+  margin-top: var(--gap-md);
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-step-2);
+  font-weight: 600;
+  color: var(--color-red-600);
+  background: transparent;
+  border: 1px solid var(--color-red-400);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+
+.button:hover:not(:disabled) {
+  background: #fff5f5;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+}
+
+.dialog {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dialogTitle {
+  font-size: var(--font-size-step-4);
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.dialogBody {
+  font-size: var(--font-size-step-3);
+  line-height: 1.45;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.dialogError {
+  font-size: var(--font-size-step-2);
+  font-weight: 600;
+  color: var(--color-red-600);
+  text-align: center;
+}
+
+.dialogActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  margin-top: var(--space-1);
+}
+
+.cancelButton {
+  min-height: var(--touch-target-min);
+  width: 100%;
+  font-size: var(--font-size-step-3);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-neutral-200);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: var(--color-neutral-300);
+}
+
+.cancelButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancelButton:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.dangerButton {
+  min-height: var(--touch-target-min);
+  width: 100%;
+  font-size: var(--font-size-step-3);
+  font-weight: 700;
+  color: white;
+  background: var(--color-red-600);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.1s, filter 0.1s;
+}
+
+.dangerButton:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.dangerButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dangerButton:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}

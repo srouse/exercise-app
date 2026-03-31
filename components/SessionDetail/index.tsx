@@ -1,21 +1,18 @@
 import Link from 'next/link'
 import type { SessionWithChildren } from '@/lib/sessionTypes'
 import { buildSessionTimeline } from '@/lib/sessionTimeline'
+import { formatSessionDuration, getSessionDurationMs } from '@/lib/sessionDuration'
 import SessionActivityTimeline from '@/components/SessionActivityTimeline'
+import DeleteSessionButton from '@/components/DeleteSessionButton'
 import styles from './SessionDetail.module.css'
 
 interface Props {
   session: SessionWithChildren
 }
 
-function formatDuration(ms: number) {
-  const m = Math.floor(ms / 60000)
-  const s = Math.floor((ms % 60000) / 1000)
-  return m > 0 ? `${m}m ${s}s` : `${s}s`
-}
-
 export default function SessionDetail({ session }: Props) {
   const events = buildSessionTimeline(session)
+  const sessionDurationMs = getSessionDurationMs(session)
 
   const totalRestMs = session.rests
     .filter((r) => r.outcome === 'completed' && r.endedAt)
@@ -40,9 +37,13 @@ export default function SessionDetail({ session }: Props) {
           })}
         </h1>
         <p className={styles.meta}>
+          {formatSessionDuration(sessionDurationMs)} session
+          {' · '}
           {session.exercises.length} exercise{session.exercises.length !== 1 ? 's' : ''} &middot;{' '}
           {session.rests.length} rest{session.rests.length !== 1 ? 's' : ''}
-          {totalRestMs > 0 ? ` · ${formatDuration(totalRestMs)} resting` : ''}
+          {totalRestMs > 0
+            ? ` · ${formatSessionDuration(totalRestMs)} resting`
+            : ''}
         </p>
       </header>
 
@@ -50,6 +51,8 @@ export default function SessionDetail({ session }: Props) {
         events={events}
         emptyMessage="No activity recorded."
       />
+
+      <DeleteSessionButton sessionId={session.id} />
     </div>
   )
 }

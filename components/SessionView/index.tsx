@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { SessionWithChildren } from "@/lib/sessionTypes";
 import { EXERCISE_PRESET_GROUPS } from "@/lib/exercisePresets";
 import { buildSessionTimeline } from "@/lib/sessionTimeline";
 import SessionActivityTimeline from "@/components/SessionActivityTimeline";
+import ExerciseAccordion from "@/components/ExerciseAccordion";
 import { useWorkoutSession } from "@/hooks/useWorkoutSession";
 import TimerDisplay from "@/components/TimerDisplay";
 import styles from "./SessionView.module.css";
@@ -15,55 +16,35 @@ interface Props {
   session: SessionWithChildren;
 }
 
+/**
+ * US2 edge case: accordion selection only updates local active exercise (`selectActiveExercise`);
+ * **Complete** logs the exercise only; **Complete and rest** chains exercise POST then rest POST.
+ */
 export default function SessionView({ session }: Props) {
   const router = useRouter();
   const refreshSession = useCallback(() => {
     router.refresh();
   }, [router]);
-  const { state, apiError, startRest, dismissAlarm, stopRest } =
-    useWorkoutSession(session.id, { onSessionMutated: refreshSession });
+  const {
+    state,
+    apiError,
+    completing,
+    selectActiveExercise,
+    cancelActiveExercise,
+    completeExerciseOnly,
+    completeCurrentExercise,
+    retryStartRestAfterExercise,
+    dismissAlarm,
+    stopRest,
+  } = useWorkoutSession(session.id, {
+    session,
+    onSessionMutated: refreshSession,
+  });
 
   const timeline = useMemo(() => buildSessionTimeline(session), [session]);
 
-  const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
-  const [logStatus, setLogStatus] = useState<
-    "idle" | "saving" | "saved" | "error"
-  >("idle");
   const [endingSession, setEndingSession] = useState(false);
   const [networkError, setNetworkError] = useState<string | null>(null);
-
-  const closeExerciseModal = useCallback(() => {
-    setExerciseModalOpen(false);
-  }, []);
-
-  useEffect(() => {
-    if (!exerciseModalOpen) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") closeExerciseModal();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [exerciseModalOpen, closeExerciseModal]);
-
-  async function logExerciseWithLabel(label: string) {
-    setLogStatus("saving");
-    setNetworkError(null);
-    try {
-      const res = await fetch(`/api/sessions/${session.id}/exercises`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ label }),
-      });
-      if (!res.ok) throw new Error("Failed to log exercise");
-      closeExerciseModal();
-      router.refresh();
-      setLogStatus("saved");
-      setTimeout(() => setLogStatus("idle"), 1500);
-    } catch {
-      setLogStatus("error");
-      setNetworkError("Could not save exercise. Try again.");
-    }
-  }
 
   async function handleEndSession() {
     setEndingSession(true);
@@ -82,7 +63,6 @@ export default function SessionView({ session }: Props) {
     }
   }
 
-  // Alarm phase — full-surface overlay
   if (state.phase === "rest_alarm") {
     return (
       <div className={`${styles.alarmOverlay} alarm-flash`} role="alert">
@@ -95,6 +75,138 @@ export default function SessionView({ session }: Props) {
     );
   }
 
+  if (state.phase === "rest_running") {
+    return (
+      <div
+        className={styles.exerciseFullscreen}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="rest-focus-title"
+        aria-live="polite"
+      >
+        <div className={styles.exerciseFullscreenInner}>
+          <p className={styles.exerciseFullscreenEyebrow}>Rest</p>
+          <h1 id="rest-focus-title" className={styles.restFullscreenTitle}>
+            Resting…
+          </h1>
+          <div className={styles.restFullscreenTimer}>
+            <TimerDisplay remainingMs={state.remainingMs ?? 0} />
+          </div>
+          <div className={styles.exerciseFullscreenActions}>
+            <button type="button" className={styles.stopButton} onClick={stopRest}>
+              Stop
+            </button>
+          </div>
+          <div className={styles.exerciseFullscreenFooter}>
+            <button
+              type="button"
+              className={styles.endButtonInline}
+              onClick={handleEndSession}
+              disabled={endingSession}
+            >
+              {endingSession ? "Ending…" : "End session"}
+            </button>
+          </div>
+        </div>
+
+        {(apiError || networkError) && (
+          <div className={styles.errorBannerFloating} role="status">
+            {apiError || networkError}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (state.phase === "exercise_active" && state.activeExerciseLabel) {
+    const label = state.activeExerciseLabel;
+    const restBlocked = state.completeFailure === "rest";
+
+    return (
+      <div
+        className={styles.exerciseFullscreen}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="exercise-focus-title"
+        aria-describedby="exercise-focus-hint"
+      >
+        <div className={styles.exerciseFullscreenInner}>
+          <p className={styles.exerciseFullscreenEyebrow}>Now</p>
+          <h1
+            id="exercise-focus-title"
+            className={styles.exerciseFullscreenTitle}
+          >
+            {label}
+          </h1>
+
+          {state.completeError && (
+            <p className={styles.exerciseFullscreenError} role="alert">
+              {state.completeError}
+            </p>
+          )}
+
+          <div className={styles.exerciseFullscreenActions}>
+            {restBlocked && (
+              <button
+                type="button"
+                className={styles.retryRestButton}
+                onClick={() => void retryStartRestAfterExercise()}
+                disabled={completing}
+              >
+                {completing ? "…" : "Retry rest timer"}
+              </button>
+            )}
+            {!restBlocked && (
+              <>
+                <button
+                  type="button"
+                  className={styles.completeVerbButton}
+                  onClick={() => void completeExerciseOnly()}
+                  disabled={completing || !label}
+                >
+                  {completing ? "…" : "Complete"}
+                </button>
+                <button
+                  type="button"
+                  className={styles.completedButton}
+                  onClick={() => void completeCurrentExercise()}
+                  disabled={completing || !label}
+                >
+                  {completing ? "…" : "Complete and rest"}
+                </button>
+              </>
+            )}
+            <button
+              type="button"
+              className={styles.cancelExerciseButton}
+              onClick={cancelActiveExercise}
+              disabled={completing}
+            >
+              Cancel
+            </button>
+          </div>
+
+          <div className={styles.exerciseFullscreenFooter}>
+            <button
+              type="button"
+              className={styles.endButtonInline}
+              onClick={handleEndSession}
+              disabled={endingSession}
+            >
+              {endingSession ? "Ending…" : "End session"}
+            </button>
+          </div>
+        </div>
+
+        {(apiError || networkError) && (
+          <div className={styles.errorBannerFloating} role="status">
+            {apiError || networkError}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <nav className={styles.nav}>
@@ -103,97 +215,15 @@ export default function SessionView({ session }: Props) {
         </Link>
       </nav>
 
-      {/* Rest running phase */}
-      {state.phase === "rest_running" && (
-        <section className={styles.restRunning}>
-          <div className={styles.restRunningHeader}>
-            <p className={styles.phaseLabel}>Resting…</p>
-          </div>
-          <div className={styles.restTimerCenter}>
-            <TimerDisplay remainingMs={state.remainingMs ?? 0} />
-          </div>
-          <div className={styles.restRunningFooter}>
-            <button className={styles.stopButton} onClick={stopRest}>
-              Stop
-            </button>
-          </div>
-        </section>
-      )}
-
-      {/* Exercise idle phase */}
-      {state.phase === "exercise_idle" && (
-        <section className={styles.idleSection}>
-          <div className={styles.idleTop}>
-            <button className={styles.startRestButton} onClick={startRest}>
-              Start Rest
-            </button>
-
-            <div className={styles.logExercise}>
-              <button
-                type="button"
-                className={styles.logButton}
-                onClick={() => setExerciseModalOpen(true)}
-                disabled={logStatus === "saving"}
-              >
-                {logStatus === "saving"
-                  ? "…"
-                  : logStatus === "saved"
-                    ? "✓ Saved"
-                    : "Log Exercise"}
-              </button>
-            </div>
-
-            {exerciseModalOpen && (
-            <div
-              className={styles.modalBackdrop}
-              role="presentation"
-              onClick={closeExerciseModal}
-            >
-              <div
-                className={styles.modalSheet}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="exercise-picker-title"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h2 id="exercise-picker-title" className={styles.modalTitle}>
-                  Pick exercise
-                </h2>
-                <div className={styles.modalScroll}>
-                  {EXERCISE_PRESET_GROUPS.map((group) => (
-                    <section key={group.label} className={styles.modalGroup}>
-                      <h3 className={styles.modalGroupLabel}>{group.label}</h3>
-                      <ul
-                        className={styles.modalList}
-                        role="listbox"
-                        aria-label={`${group.label} exercises`}
-                      >
-                        {group.exercises.map((name) => (
-                          <li key={name}>
-                            <button
-                              type="button"
-                              className={styles.modalRow}
-                              disabled={logStatus === "saving"}
-                              onClick={() => logExerciseWithLabel(name)}
-                            >
-                              {name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  className={styles.modalCancel}
-                  onClick={closeExerciseModal}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-            )}
+      {state.phase === "catalog" && (
+        <section className={styles.mainSection}>
+          <div className={styles.catalogTop}>
+            <ExerciseAccordion
+              groups={EXERCISE_PRESET_GROUPS}
+              selectedExerciseLabel={state.activeExerciseLabel}
+              onSelectExercise={selectActiveExercise}
+              disabled={false}
+            />
           </div>
 
           <div className={styles.activityRegion}>
@@ -215,7 +245,6 @@ export default function SessionView({ session }: Props) {
         </section>
       )}
 
-      {/* Network error banner — non-blocking */}
       {(apiError || networkError) && (
         <div className={styles.errorBanner} role="status">
           {apiError || networkError}
