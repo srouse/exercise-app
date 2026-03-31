@@ -150,3 +150,32 @@ Consolidated checkpoint workflow into a Cursor skill, single session log path un
 - Use `@session-checkpoint` or `/session-checkpoint` for future end-of-session runs
 
 ---
+
+### [2026-03-29 — session 6]
+
+#### Summary
+
+Phase 9 in-session flow (accordion, chained Complete / Complete and rest, full-screen exercise and rest), fixed exercise-only completion incorrectly reopening rest when dangling server rests existed, and surfaced session wall-clock duration on the home list and ended-session detail.
+
+#### Changes
+
+- Features: `ExerciseAccordion`; `completeExerciseOnly` vs `completeCurrentExercise`; full-screen `SessionView` for exercise and rest; `lib/sessionDuration.ts` + live duration on `SessionListItem`; `DELETE /api/sessions/[id]` + `DeleteSessionButton` (not on active session chrome)
+- Fixes: After exercise-only POST, PATCH-cancel open rests so `useWorkoutSession` session sync does not immediately hydrate `rest_running`; debug-validated root cause (open rest rows vs wrong handler)
+- Code: `SessionView/*`, `useWorkoutSession.ts`, `SessionListItem/*`, `SessionDetail`, `sessionDuration.ts`, `DeleteSessionButton/*`, `ExerciseAccordion/*`, `app/api/sessions/[id]/route.ts`, `lib/db/queries/sessions.ts`, `specs/001-exercise-app/*`, `.specify/memory/constitution.md`
+
+#### Spec Impact
+
+- status: none
+- refs: (prior Phase 9 work already reflected in `specs/001-exercise-app/tasks.md` / spec in this commit)
+- notes: No repo-root `/spec` directory — skill skips that tree; feature/spec deltas live under `specs/001-exercise-app`
+
+#### Decisions
+
+- Exercise-only completion cancels all unended rests on the loaded session so client catalog and server truth stay aligned without inventing a new endpoint
+- Home list uses a 1s tick only while `status === 'active'` so duration stays readable without polling the server
+
+#### Next
+
+- Device pass on accordion + both completion paths + rest full-screen; T058/T059 from tasks if needed
+
+---
